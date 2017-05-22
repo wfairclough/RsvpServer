@@ -9,7 +9,7 @@ data class Guest(val key: DbKey? = null,
                  val menuItem: MenuItem? = null,
                  val email: String? = null,
                  val address: Address? = null,
-                 val phone: List<PhoneNo>? = null)
+                 val phone: PhoneNo? = null)
 
 data class Address(val street1: String,
                    val street2: String?,
@@ -21,7 +21,11 @@ data class Address(val street1: String,
 enum class Country(val code: String) {
     Canada("CA"),
     UnitedStates("US"),
-    Ireland("IRE")
+    Ireland("IE")
 }
 
 typealias PhoneNo = String
+
+data class MenuItem(val key: DbKey? = null,
+                    val name: String,
+                    val notes: String? = null)
