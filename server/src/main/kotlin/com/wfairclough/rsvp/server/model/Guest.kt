@@ -3,10 +3,11 @@ package com.wfairclough.rsvp.server.model
 /**
  * Created by will on 2017-05-22.
  */
-data class Guest(val key: DbKey? = null,
+data class Guest(val key: DbKey? = DbKeyUtils.generate(),
                  val firstname: String,
                  val lastname: String,
                  val menuItem: MenuItem? = null,
+                 val rsvp: Boolean = false,
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null)

@@ -2,11 +2,10 @@ package com.wfairclough.rsvp.server.controllers
 
 import com.google.gson.Gson
 import com.wfairclough.rsvp.server.dao.InvitationDao
+import com.wfairclough.rsvp.server.json.Serializer
+import spark.Request
 import spark.Response
 import spark.ResponseTransformer
-//import org.jetbrains.ktor.application.ApplicationCall
-//import org.jetbrains.ktor.http.ContentType
-//import org.jetbrains.ktor.response.respondText
 import java.lang.reflect.Type
 
 /**
@@ -34,21 +33,15 @@ fun Response.bodyAsJson(body: Any, typeOfStr: Type): Response {
     return this
 }
 
-//val ApplicationCall.gson by lazy { Gson() }
-//
-//val ApplicationCall.defaultContentType by lazy { ContentType.Application.Json }
-//
-//suspend fun ApplicationCall.respondJson(src: Any) {
-//    respondText(gson.toJson(src), defaultContentType)
-//}
-//
-//suspend fun ApplicationCall.respondJson(src: Any, typeOfStr: Type) {
-//    respondText(gson.toJson(src, typeOfStr), defaultContentType)
-//}
+val Request.gson by lazy { Gson() }
+
+fun <T> Request.bodyAs(clazz: Class<T>): T {
+    return gson.fromJson(body(), clazz)
+}
 
 class JsonTransformer : ResponseTransformer {
 
-    protected val gson by lazy { Gson() }
+    protected val gson by lazy { Serializer.gson }
 
     override fun render(model: Any?): String {
 

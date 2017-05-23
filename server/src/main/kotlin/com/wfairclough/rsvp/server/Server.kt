@@ -3,13 +3,7 @@ package com.wfairclough.rsvp.server
 import com.wfairclough.rsvp.server.controllers.GuestsCtrl
 import com.wfairclough.rsvp.server.controllers.InvitationCtrl
 import com.wfairclough.rsvp.server.controllers.JsonTransformer
-import com.wfairclough.rsvp.server.model.Address
-import com.wfairclough.rsvp.server.model.Country
-import com.wfairclough.rsvp.server.model.Guest
-import com.wfairclough.rsvp.server.model.MenuItem
 import com.wfairclough.rsvp.server.utils.Log
-import spark.Request
-import spark.Response
 import spark.Route
 import spark.Spark.port
 import spark.Spark.path
@@ -24,7 +18,7 @@ fun main(args: Array<String>) {
     port(8080)
 
     path("/api") {
-        before("/*") { req, rsp -> Log.i("Api request: ${req.uri()}")}
+        before("/*") { req, rsp -> Log.i("Api request: ${req.uri()}") }
         path("/invitations") {
             post("/create", InvitationCtrl.create)
 

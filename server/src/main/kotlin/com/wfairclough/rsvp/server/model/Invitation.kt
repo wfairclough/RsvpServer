@@ -5,12 +5,13 @@ import org.joda.time.DateTime
 /**
  * Created by will on 2017-05-22.
  */
-data class Invitation(val key: DbKey?,
+data class Invitation(val _id: MongoID? = null,
+                      var key: DbKey = DbKeyUtils.generate(),
                       val code: String,
-                      val viewed: Boolean,
-                      val sent: Boolean,
+                      val viewed: Boolean = false,
+                      val sent: Boolean = false,
                       val guests: List<Guest>,
-                      val visits: List<VisitRecord>)
+                      val visits: List<VisitRecord>? = null)
 
 data class VisitRecord(val datetime: DateTime,
                        val userAgent: String?)
