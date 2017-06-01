@@ -43,9 +43,6 @@ class JsonTransformer : ResponseTransformer {
 
     protected val gson by lazy { Serializer.gson }
 
-    override fun render(model: Any?): String {
-
-        return gson.toJson(model)
-    }
+    override fun render(model: Any?): String = gson.toJson(model)
 
 }

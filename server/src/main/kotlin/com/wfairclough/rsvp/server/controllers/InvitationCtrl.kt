@@ -1,6 +1,5 @@
 package com.wfairclough.rsvp.server.controllers
 
-import com.wfairclough.rsvp.server.model.DbKey
 import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.Invitation
 import com.wfairclough.rsvp.server.utils.Log
@@ -27,8 +26,18 @@ object InvitationCtrl : BaseCtrl() {
         return@Route invitationDao.create(invitation)
     }
 
+    data class InvitationQuery(val query: String)
+
     val get = Route { req, rsp ->
-        "test"
+        val queryJson = req.bodyAs(InvitationQuery::class.java)
+
+        return@Route invitationDao.findFirst { it.code == queryJson.query}
+    }
+
+    val query = Route { req, rsp ->
+        val queryJson = req.bodyAs(InvitationQuery::class.java)
+
+        return@Route invitationDao.findFirst { it.code == queryJson.query}
     }
 
 

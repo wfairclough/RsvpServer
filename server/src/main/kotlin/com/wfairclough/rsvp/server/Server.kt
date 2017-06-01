@@ -22,6 +22,8 @@ fun main(args: Array<String>) {
         path("/invitations") {
             post("/create", InvitationCtrl.create)
 
+            post("/query", InvitationCtrl.query)
+
             get("/guests", GuestsCtrl.list)
 
             get("/:key", InvitationCtrl.get)

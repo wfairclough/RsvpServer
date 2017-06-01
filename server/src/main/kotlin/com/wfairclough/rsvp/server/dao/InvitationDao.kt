@@ -10,9 +10,9 @@ import org.litote.kmongo.getCollection
 /**
  * Created by will on 2017-05-22.
  */
-class InvitationDao : BaseDao() {
+class InvitationDao : BaseDao<Invitation>() {
 
-    val collection = database.getCollection<Invitation>()
+    override val collection by lazy { database.getCollection<Invitation>() }
 
     fun create(invitation: Invitation): ResourceCreated<Invitation>? {
         try {
@@ -30,4 +30,5 @@ class InvitationDao : BaseDao() {
         Log.w("Could not find new record")
         return null
     }
+
 }

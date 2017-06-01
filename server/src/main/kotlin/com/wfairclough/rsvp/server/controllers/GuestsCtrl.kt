@@ -12,7 +12,7 @@ import spark.Route
 object GuestsCtrl : BaseCtrl() {
 
     val get = Route { req, rsp ->
-        rsp?.type("application/json")
+    rsp?.type("application/json")
         rsp?.status(200)
         Guest(firstname = "Will",
                 lastname = "Fairclough",

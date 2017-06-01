@@ -16,6 +16,6 @@ typealias DbKey = String
 
 typealias MongoID = ObjectId
 
-data class ResourceCreated<T>(val key: DbKey, @Exclude val _data: T)
+data class ResourceCreated<out T>(val key: DbKey, @Exclude val _data: T)
 
 
