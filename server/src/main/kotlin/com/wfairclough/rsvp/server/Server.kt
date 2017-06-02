@@ -2,60 +2,61 @@ package com.wfairclough.rsvp.server
 
 import com.wfairclough.rsvp.server.controllers.GuestsCtrl
 import com.wfairclough.rsvp.server.controllers.InvitationCtrl
-import com.wfairclough.rsvp.server.controllers.JsonTransformer
-import com.wfairclough.rsvp.server.utils.Log
-import spark.Route
-import spark.Spark.port
-import spark.Spark.path
-import spark.Spark.before
+import io.vertx.core.Vertx
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.BodyHandler
 
-val defaultTransformer = JsonTransformer()
+object Rsvp {
 
-val defaultContentType = "application/json"
+    val defaultContentType = "application/json"
+
+    val vertx = Vertx.vertx()
+    val server = vertx.createHttpServer()
+
+    val rootRouter = Router.router(vertx)
+    val apiRouter = Router.router(vertx)
+    val invitationsRouter = Router.router(vertx)
+
+    fun init() {
+        rootInit()
+        apiInit()
+        failureInit()
+    }
+
+    private fun rootInit() {
+        rootRouter.mountSubRouter("/api", apiRouter)
+    }
+
+    private fun apiInit() {
+        apiRouter.route().handler(BodyHandler.create())
+        apiRouter.route("/*").consumes(defaultContentType).handler { ctx ->
+            ctx.response().putHeader("Content-Type", defaultContentType)
+            ctx.next()
+        }
+        apiRouter.post("/invitations/create").consumes(defaultContentType).handler(InvitationCtrl.create)
+        apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
+        apiRouter.get("/invitations/:key").consumes(defaultContentType).handler(InvitationCtrl.get)
+        apiRouter.get("/invitations/guests").consumes(defaultContentType).handler(GuestsCtrl.list)
+    }
+
+    private fun failureInit() {
+//        rootRouter.route("/*").failureHandler { ctx ->
+//
+//            ctx.response().setStatusCode(500).end("Sorry Bud!")
+//        }
+    }
+
+    fun start() {
+        server.requestHandler({ rootRouter.accept(it) }).listen(8080)
+    }
+}
 
 fun main(args: Array<String>) {
 
-    port(8080)
+    Rsvp.server
 
-    path("/api") {
-        before("/*") { req, rsp -> Log.i("Api request: ${req.uri()}") }
-        path("/invitations") {
-            post("/create", InvitationCtrl.create)
+    Rsvp.init()
 
-            post("/query", InvitationCtrl.query)
+    Rsvp.start()
 
-            get("/guests", GuestsCtrl.list)
-
-            get("/:key", InvitationCtrl.get)
-
-            path("/guests") {
-                get("/:key", GuestsCtrl.get)
-            }
-        }
-    }
-
-}
-
-inline fun get(path: String, route: Route) {
-    spark.Spark.get(path, defaultContentType, route, defaultTransformer)
-}
-
-inline fun put(path: String, route: Route) {
-    spark.Spark.put(path, defaultContentType, route, defaultTransformer)
-}
-
-inline fun post(path: String, route: Route) {
-    spark.Spark.post(path, defaultContentType, route, defaultTransformer)
-}
-
-inline fun patch(path: String, route: Route) {
-    spark.Spark.patch(path, defaultContentType, route, defaultTransformer)
-}
-
-inline fun delete(path: String, route: Route) {
-    spark.Spark.delete(path, defaultContentType, route, defaultTransformer)
-}
-
-inline fun options(path: String, route: Route) {
-    spark.Spark.options(path, defaultContentType, route, defaultTransformer)
 }
