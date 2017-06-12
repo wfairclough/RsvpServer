@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder
 import com.wfairclough.rsvp.server.dao.InvitationDao
 import com.wfairclough.rsvp.server.json.ExcludeJson
 import com.wfairclough.rsvp.server.json.Serializer
+import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.RoutingContext
 import java.lang.reflect.Type
@@ -47,10 +48,15 @@ fun <T> RoutingContext.bodyAs(clazz: Class<T>): T {
     return Global.gson.fromJson<T>(bodyAsString, clazz)
 }
 
+fun RoutingContext.fail(message: String, code: Int) {
+    put("message", message)
+    fail(code)
+}
+
 fun <T> RoutingContext.bodyAsOrFail(clazz: Class<T>): T? {
     val data = Global.gson.fromJson<T>(bodyAsString, clazz)
     if (data == null) {
-        fail(400)
+        fail("Could not parse request body", 400)
         return null
     }
     return data
@@ -60,32 +66,17 @@ fun <T> HttpServerResponse.success(resp: T) {
     setStatusCode(200).end(Global.gson.toJson(resp))
 }
 
-//val Response.gson by lazy { Gson() }
-//
-//val Response.defaultContentType by lazy { "application/json" }
-//
-//fun Response.bodyAsJson(body: Any): Response {
-//    body(gson.toJson(body))
-//    type(defaultContentType)
-//    return this
-//}
-//
-//fun Response.bodyAsJson(body: Any, typeOfStr: Type): Response {
-//    body(gson.toJson(body, typeOfStr))
-//    type(defaultContentType)
-//    return this
-//}
-//
-//val Request.gson by lazy { Gson() }
-//
-//fun <T> Request.bodyAs(clazz: Class<T>): T {
-//    return gson.fromJson(body(), clazz)
-//}
-//
-//class JsonTransformer : ResponseTransformer {
-//
-//    protected val gson by lazy { Serializer.gson }
-//
-//    override fun render(model: Any?): String = gson.toJson(model)
-//
-//}
+val HttpServerRequest.queryParams: Map<String, String>
+    get() {
+        return query()?.split("&")?.fold(mutableMapOf<String, String>()) { acc, part ->
+            val pairParts = part.split("=", limit = 2)
+            if (pairParts.size == 2) {
+                acc.put(pairParts[0], pairParts[1])
+            }
+            return@fold acc
+        } ?: mapOf()
+    }
+
+fun HttpServerRequest.queryParam(key: String): String? {
+    return queryParams[key]
+}

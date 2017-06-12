@@ -1,9 +1,5 @@
 package com.wfairclough.rsvp.server.controllers
 
-import com.wfairclough.rsvp.server.model.Address
-import com.wfairclough.rsvp.server.model.Country
-import com.wfairclough.rsvp.server.model.Guest
-import com.wfairclough.rsvp.server.model.MenuItem
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
 
@@ -13,17 +9,16 @@ import io.vertx.ext.web.RoutingContext
 object GuestsCtrl : BaseCtrl() {
 
     val get = Handler<RoutingContext> { ctx ->
-//    rsp?.type("application/json")
-//        rsp?.status(200)
-//        Guest(firstname = "Will",
-//                lastname = "Fairclough",
-//                email = "wfairclough@gmail.com",
-//                menuItem = MenuItem(name = "Pork"),
-//                address = Address("228 Latchford Rd.", null, "Ottawa", "Ontario", Country.Canada, "K1Z 1B9"),
-//                phone = "613-292-5351")
+        val key = ctx.pathParam("key") ?: ""
+        val guest =  invitationDao.findGuestByKey(key)
+        ctx.response().success(guest)
     }
 
     val list = Handler<RoutingContext> { ctx ->
-        ctx.response().success("")
+        val limit = ctx.request().queryParams["limit"]?.toIntOrNull() ?: 100
+        val skip = ctx.request().queryParams["skip"]?.toIntOrNull() ?: 0
+
+        val guests = invitationDao.findAllGuests(skip, limit)
+        ctx.response().success(guests)
     }
 }

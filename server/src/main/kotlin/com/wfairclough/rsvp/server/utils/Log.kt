@@ -22,8 +22,8 @@ object Log {
         logger.warn(msg)
     }
 
-    fun e(msg: String) {
-        logger.error(msg)
+    fun e(msg: String, t: Throwable? = null) {
+        logger.error(msg, t)
     }
 
 }

@@ -1,9 +1,11 @@
 package com.wfairclough.rsvp.server.dao
 
 import com.mongodb.MongoException
+import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.Invitation
 import com.wfairclough.rsvp.server.model.ResourceCreated
 import com.wfairclough.rsvp.server.utils.Log
+import org.litote.kmongo.find
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection
 
@@ -29,6 +31,17 @@ class InvitationDao : BaseDao<Invitation>() {
         }
         Log.w("Could not find new record")
         return null
+    }
+
+    fun findByFirstAndLast(firstname: String, lastname: String): Invitation? =
+            collection.findOne("{'guests.firstname': /^$firstname$/i, 'guests.lastname': /^$lastname$/i}")
+
+    fun findAllGuests(skip: Int = 0, limit: Int = 100): List<Guest> {
+        return collection.find().skip(skip).limit(limit).flatMap { it.guests }
+    }
+
+    fun findGuestByKey(key: String): Guest? {
+        return collection.find("{'guests.key': '$key'}").flatMap { it.guests }.firstOrNull()
     }
 
 }

@@ -21,8 +21,6 @@ abstract class BaseDao<T> {
 
     fun filter(predicate: (T) -> Boolean): List<T> = collection.find().filter(predicate)
 
-    fun findFirst(predicate: (T) -> Boolean): T? = collection.find().first(predicate)
-
-
+    fun findFirst(predicate: (T) -> Boolean): T? = collection.find().firstOrNull(predicate)
 
 }

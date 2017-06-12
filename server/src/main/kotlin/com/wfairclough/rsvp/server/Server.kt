@@ -8,13 +8,17 @@ import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.vertx.core.json.JsonArray
+import io.vertx.core.json.JsonObject
+
 
 object Rsvp {
 
     val defaultContentType = "application/json"
 
     var staticPath = "public"
-    var port = 8080
+    var port = 3000
     var cacheEnabled = true
 
     val vertx = Vertx.vertx()
@@ -39,6 +43,12 @@ object Rsvp {
 
     private fun apiInit() {
         apiRouter.route().handler(BodyHandler.create())
+        apiRouter.route("/*").handler { ctx ->
+            ctx.addBodyEndHandler {
+                Log.i("REQ: [${ctx.request().method().name}] (${ctx.response().statusCode}) - ${ctx.normalisedPath()}")
+            }
+            ctx.next()
+        }
         apiRouter.route("/*").consumes(defaultContentType).handler { ctx ->
             ctx.response().putHeader("Content-Type", defaultContentType)
             ctx.next()
@@ -46,15 +56,31 @@ object Rsvp {
 
         apiRouter.post("/invitations/create").consumes(defaultContentType).handler(InvitationCtrl.create)
         apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
-        apiRouter.get("/invitations/:code").consumes(defaultContentType).handler(InvitationCtrl.get)
         apiRouter.get("/invitations/guests").consumes(defaultContentType).handler(GuestsCtrl.list)
+        apiRouter.get("/invitations/guests/:key").consumes(defaultContentType).handler(GuestsCtrl.get)
+        apiRouter.get("/invitations/:code").consumes(defaultContentType).handler(InvitationCtrl.get)
     }
 
     private fun failureInit() {
-//        rootRouter.route("/*").failureHandler { ctx ->
-//
-//            ctx.response().setStatusCode(500).end("Sorry Bud!")
-//        }
+        rootRouter.route("/*").failureHandler { ctx ->
+            val statusCode = ctx.statusCode().let { if (it == -1) return@let 500 else return@let it }
+            val json = JsonObject().apply {
+                put("timestamp", System.nanoTime())
+                put("status", statusCode)
+                put("error", HttpResponseStatus.valueOf(statusCode).reasonPhrase())
+                put("path", ctx.request().path())
+                ctx.get<String?>("message")?.let { put("message", it) }
+                ctx.failure()?.let {
+                    val stacktrace = it.stackTrace.map { it.toString() }.fold(JsonArray().add(it.message)) { jsonArr, line -> jsonArr.add(line) }
+                    put("stacktrace", stacktrace)
+                    Log.e("Mess $it", it)
+                }
+            }
+
+            ctx.response().putHeader("Content-Type", "$defaultContentType; charset=utf-8")
+            ctx.response().statusCode = statusCode
+            ctx.response().end(json.encodePrettily())
+        }
     }
 
     fun start() {
@@ -73,12 +99,11 @@ fun main(args: Array<String>) {
         Log.i("Version: 1.0")
     }
 
-    options.getIntArg("port", 8080)?.let { Rsvp.port = it }
+    options.getIntArg("port", 3000)?.let { Rsvp.port = it }
 
     Rsvp.cacheEnabled = !options.hasArg("disable-cache")
 
     Rsvp.init()
 
     Rsvp.start()
-
 }

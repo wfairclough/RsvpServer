@@ -1,7 +1,5 @@
 package com.wfairclough.rsvp.server.model
 
-import com.wfairclough.rsvp.server.json.ExcludeJson
-
 /**
  * Created by will on 2017-05-22.
  */
@@ -12,7 +10,8 @@ data class Guest(val key: DbKey? = DbKeyUtils.generate(),
                  val rsvp: Boolean = false,
                  val email: String? = null,
                  val address: Address? = null,
-                 val phone: PhoneNo? = null)
+                 val phone: PhoneNo? = null,
+                 val invitationKey: String? = null)
 
 data class Address(val street1: String,
                    val street2: String?,
