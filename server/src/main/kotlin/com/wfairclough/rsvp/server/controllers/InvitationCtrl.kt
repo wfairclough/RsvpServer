@@ -38,7 +38,8 @@ object InvitationCtrl : BaseCtrl() {
             }
 
             val inviteKey = DbKeyUtils.generate()
-            val mainGuest = Guest(firstname = reqJson.guest.firstname,
+            val mainGuest = Guest(
+                    firstname = reqJson.guest.firstname,
                     lastname = reqJson.guest.lastname,
                     email = reqJson.guest.email,
                     invitationKey = inviteKey)
