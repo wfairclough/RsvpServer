@@ -15,6 +15,7 @@ object Rsvp {
 
     var staticPath = "public"
     var port = 8080
+    var cacheEnabled = true
 
     val vertx = Vertx.vertx()
     val server = vertx.createHttpServer()
@@ -33,7 +34,7 @@ object Rsvp {
         rootRouter.mountSubRouter("/api", apiRouter)
 
         // Set a static server to serve static resources, e.g. the login page
-        rootRouter.route().handler(StaticHandler.create(staticPath))
+        rootRouter.route().handler(StaticHandler.create(staticPath).setCachingEnabled(cacheEnabled))
     }
 
     private fun apiInit() {
@@ -73,6 +74,8 @@ fun main(args: Array<String>) {
     }
 
     options.getIntArg("port", 8080)?.let { Rsvp.port = it }
+
+    Rsvp.cacheEnabled = !options.hasArg("disable-cache")
 
     Rsvp.init()
 
