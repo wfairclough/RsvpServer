@@ -31,10 +31,6 @@ object Rsvp {
 
     private fun rootInit() {
         rootRouter.mountSubRouter("/api", apiRouter)
-        rootRouter.get("/:code").consumes("text/html").handler {
-
-            it.reroute("/api/invitations/${it.pathParam("code")}")
-        }
 
         // Set a static server to serve static resources, e.g. the login page
         rootRouter.route().handler(StaticHandler.create(staticPath))

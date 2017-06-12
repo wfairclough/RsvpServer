@@ -31,16 +31,9 @@ kotlin {
     }
 }
 
-jar {
-//    baseName = 'analytics'
-    from('src/main/config') {
-        include '**/*.properties'
-    }
+applicationDistribution.from("src/main/config/") {
+    into "config"
 }
-
-//applicationDistribution.from("src/main/config/") {
-//    into "config"
-//}
 
 applicationDistribution.from("../public/") {
     into "public"

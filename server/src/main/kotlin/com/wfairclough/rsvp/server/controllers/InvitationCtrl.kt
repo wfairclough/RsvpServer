@@ -36,8 +36,8 @@ object InvitationCtrl : BaseCtrl() {
 
     data class InvitationQuery(val query: String)
 
-    val get = Handler<RoutingContext> { req ->
-
+    val get = Handler<RoutingContext> { ctx ->
+        ctx.response().success("")
     }
 
     val query = Handler<RoutingContext> { ctx ->
