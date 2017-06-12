@@ -11,6 +11,8 @@ object Rsvp {
 
     val defaultContentType = "application/json"
 
+    var staticPath = "public"
+
     val vertx = Vertx.vertx()
     val server = vertx.createHttpServer()
 
@@ -26,13 +28,13 @@ object Rsvp {
 
     private fun rootInit() {
         rootRouter.mountSubRouter("/api", apiRouter)
-        rootRouter.get("/:code").consumes(defaultContentType).handler {
+        rootRouter.get("/:code").consumes("text/html").handler {
 
             it.reroute("/api/invitations/${it.pathParam("code")}")
         }
 
         // Set a static server to serve static resources, e.g. the login page
-        rootRouter.route().handler(StaticHandler.create("public"))
+        rootRouter.route().handler(StaticHandler.create(staticPath))
     }
 
     private fun apiInit() {
@@ -61,6 +63,12 @@ object Rsvp {
 }
 
 fun main(args: Array<String>) {
+
+    val pathIdx = args.indexOf("-path")
+
+    if (pathIdx != -1) {
+        Rsvp.staticPath = args[pathIdx + 1]
+    }
 
     Rsvp.server
 
