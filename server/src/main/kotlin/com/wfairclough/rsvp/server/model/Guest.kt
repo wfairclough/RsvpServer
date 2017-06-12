@@ -1,5 +1,7 @@
 package com.wfairclough.rsvp.server.model
 
+import com.wfairclough.rsvp.server.json.ExcludeJson
+
 /**
  * Created by will on 2017-05-22.
  */

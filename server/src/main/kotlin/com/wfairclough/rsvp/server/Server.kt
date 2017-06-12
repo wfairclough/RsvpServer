@@ -2,6 +2,8 @@ package com.wfairclough.rsvp.server
 
 import com.wfairclough.rsvp.server.controllers.GuestsCtrl
 import com.wfairclough.rsvp.server.controllers.InvitationCtrl
+import com.wfairclough.rsvp.server.utils.Log
+import com.wfairclough.rsvp.server.utils.Options
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
@@ -12,6 +14,7 @@ object Rsvp {
     val defaultContentType = "application/json"
 
     var staticPath = "public"
+    var port = 8080
 
     val vertx = Vertx.vertx()
     val server = vertx.createHttpServer()
@@ -58,19 +61,22 @@ object Rsvp {
     }
 
     fun start() {
-        server.requestHandler({ rootRouter.accept(it) }).listen(8080)
+        Log.i("Starting server on port $port")
+        server.requestHandler({ rootRouter.accept(it) }).listen(port)
     }
 }
 
 fun main(args: Array<String>) {
 
-    val pathIdx = args.indexOf("-path")
+    val options = Options(args)
 
-    if (pathIdx != -1) {
-        Rsvp.staticPath = args[pathIdx + 1]
+    options.getArg("path", "public")?.let { Rsvp.staticPath = it }
+
+    if (options.hasArg("version")) {
+        Log.i("Version: 1.0")
     }
 
-    Rsvp.server
+    options.getIntArg("port", 8080)?.let { Rsvp.port = it }
 
     Rsvp.init()
 

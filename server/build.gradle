@@ -10,7 +10,10 @@ dependencies {
     compile "org.litote.kmongo:kmongo:3.3.5"
     compile "com.google.code.gson:gson:2.8.0"
     compile "joda-time:joda-time:2.9.9"
-    compile 'org.slf4j:slf4j-simple:1.7.21'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.slf4j:slf4j-log4j12:1.7.21'
+    compile 'org.slf4j:slf4j-log4j12:1.7.21'
+    compile 'org.apache.logging.log4j:log4j-core:2.8.2'
 }
 
 mainClassName = 'com.wfairclough.rsvp.server.ServerKt'
@@ -26,6 +29,21 @@ kotlin {
     experimental {
         coroutines 'enable'
     }
+}
+
+jar {
+//    baseName = 'analytics'
+    from('src/main/config') {
+        include '**/*.properties'
+    }
+}
+
+//applicationDistribution.from("src/main/config/") {
+//    into "config"
+//}
+
+applicationDistribution.from("../public/") {
+    into "public"
 }
 
 compileKotlin {
