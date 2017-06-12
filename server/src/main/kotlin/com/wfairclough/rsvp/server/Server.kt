@@ -5,6 +5,7 @@ import com.wfairclough.rsvp.server.controllers.InvitationCtrl
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.ext.web.handler.StaticHandler
 
 object Rsvp {
 
@@ -29,6 +30,9 @@ object Rsvp {
 
             it.reroute("/api/invitations/${it.pathParam("code")}")
         }
+
+        // Set a static server to serve static resources, e.g. the login page
+        rootRouter.route().handler(StaticHandler.create("public"))
     }
 
     private fun apiInit() {
