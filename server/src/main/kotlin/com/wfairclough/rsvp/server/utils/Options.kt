@@ -23,7 +23,11 @@ class Options(val args: Array<String>) {
     }
 
     fun getIntArg(key: String, def: Int? = null): Int? {
-        return getArg("key")?.let { it.toIntOrNull() }
+        return getArg(key, def = null)?.toIntOrNull() ?: def
+    }
+
+    fun getBoolArg(key: String): Boolean? {
+        return getArg(key, def = null)?.toBoolean()
     }
 
 }
