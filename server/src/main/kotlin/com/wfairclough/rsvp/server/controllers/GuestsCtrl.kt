@@ -24,6 +24,6 @@ object GuestsCtrl : BaseCtrl() {
     }
 
     val list = Handler<RoutingContext> { ctx ->
-        ctx.response().setStatusCode(400).end("bad")
+        ctx.response().success("")
     }
 }

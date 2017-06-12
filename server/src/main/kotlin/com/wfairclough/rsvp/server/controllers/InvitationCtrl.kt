@@ -17,7 +17,7 @@ object InvitationCtrl : BaseCtrl() {
     data class CreateInvitationReq(val code: String, val guest: InvitationGuest)
 
     val create = Handler<RoutingContext> { ctx ->
-        val reqJson: CreateInvitationReq? = ctx.bodyAs(CreateInvitationReq::class.java)
+        val reqJson: CreateInvitationReq? = ctx.bodyAsOrFail(CreateInvitationReq::class.java) ?: return@Handler
 
         reqJson?.let {
             Log.i("Json: $reqJson")
@@ -29,8 +29,8 @@ object InvitationCtrl : BaseCtrl() {
 
             val invite = invitationDao.create(invitation)
 
-            invite?.let { ctx.response().end(it) } ?: ctx.fail(403)
-        } ?: ctx.fail(400)
+            invite?.let { ctx.response().success(it) } ?: ctx.fail(403)
+        }
 
     }
 
@@ -41,9 +41,9 @@ object InvitationCtrl : BaseCtrl() {
     }
 
     val query = Handler<RoutingContext> { ctx ->
-        val queryJson = ctx.bodyAs(InvitationQuery::class.java)
+        val queryJson = ctx.bodyAsOrFail(InvitationQuery::class.java) ?: return@Handler
         val ret = invitationDao.findFirst { it.code == queryJson.query}
-        ctx.response().setStatusCode(200).end(ret)
+        ctx.response().success(ret)
     }
 
 //    val get = Route { req, rsp ->

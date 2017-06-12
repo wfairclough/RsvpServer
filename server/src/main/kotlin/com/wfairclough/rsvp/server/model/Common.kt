@@ -1,6 +1,7 @@
 package com.wfairclough.rsvp.server.model
 
 import com.wfairclough.rsvp.server.json.Exclude
+import io.vertx.ext.web.RoutingContext
 import org.bson.types.ObjectId
 import java.util.*
 

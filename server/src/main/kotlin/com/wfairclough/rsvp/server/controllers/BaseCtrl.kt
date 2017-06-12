@@ -24,8 +24,17 @@ fun <T> RoutingContext.bodyAs(clazz: Class<T>): T {
     return Global.gson.fromJson<T>(bodyAsString, clazz)
 }
 
-fun <T> HttpServerResponse.end(resp: T) {
-    end(Global.gson.toJson(resp))
+fun <T> RoutingContext.bodyAsOrFail(clazz: Class<T>): T? {
+    val data = Global.gson.fromJson<T>(bodyAsString, clazz)
+    if (data == null) {
+        fail(400)
+        return null
+    }
+    return data
+}
+
+fun <T> HttpServerResponse.success(resp: T) {
+    setStatusCode(200).end(Global.gson.toJson(resp))
 }
 
 //val Response.gson by lazy { Gson() }

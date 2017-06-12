@@ -25,6 +25,10 @@ object Rsvp {
 
     private fun rootInit() {
         rootRouter.mountSubRouter("/api", apiRouter)
+        rootRouter.get("/:code").consumes(defaultContentType).handler {
+
+            it.reroute("/api/invitations/${it.pathParam("code")}")
+        }
     }
 
     private fun apiInit() {
@@ -33,9 +37,10 @@ object Rsvp {
             ctx.response().putHeader("Content-Type", defaultContentType)
             ctx.next()
         }
+
         apiRouter.post("/invitations/create").consumes(defaultContentType).handler(InvitationCtrl.create)
         apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
-        apiRouter.get("/invitations/:key").consumes(defaultContentType).handler(InvitationCtrl.get)
+        apiRouter.get("/invitations/:code").consumes(defaultContentType).handler(InvitationCtrl.get)
         apiRouter.get("/invitations/guests").consumes(defaultContentType).handler(GuestsCtrl.list)
     }
 
