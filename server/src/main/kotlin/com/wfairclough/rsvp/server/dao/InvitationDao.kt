@@ -36,8 +36,9 @@ class InvitationDao : BaseDao<Invitation>() {
     fun findByFirstAndLast(firstname: String, lastname: String): Invitation? =
             collection.findOne("{'guests.firstname': /^$firstname$/i, 'guests.lastname': /^$lastname$/i}")
 
-    fun findAllGuests(skip: Int = 0, limit: Int = 100): List<Guest> {
-        return collection.find().skip(skip).limit(limit).flatMap { it.guests }
+    fun findAllGuests(skip: Int = 0, limit: Int = 100, rsvp: Boolean? = null): List<Guest> {
+        val res = rsvp?.let { collection.find("{'guests.rsvp': $it}") } ?: collection.find()
+        return res.skip(skip).limit(limit).flatMap { it.guests }.filter { g -> rsvp?.let { g.rsvp == it} ?: true }
     }
 
     fun findGuestByKey(key: String): Guest? {

@@ -19,11 +19,11 @@ object GuestsCtrl : BaseCtrl() {
     val list = Handler<RoutingContext> { ctx ->
         val limit = ctx.request().queryParams["limit"]?.toIntOrNull() ?: 100
         val skip = ctx.request().queryParams["skip"]?.toIntOrNull() ?: 0
+        val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
-        val guests = invitationDao.findAllGuests(skip, limit)
+        val guests = invitationDao.findAllGuests(skip, limit, rsvp)
         ctx.response().success(guests)
     }
-
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
         val fullname: String
