@@ -142,6 +142,7 @@ object GuestsCtrl : BaseCtrl() {
     }
 
     val deletePlusOne = Handler<RoutingContext> { ctx ->
+        val force = ctx.normalisedPath().endsWith("force")
         val guestKey = ctx.pathParam("key") ?: ""
         if (guestKey.isBlank()) {
             ctx.fail("Must include a non-blank guest key", 400)
@@ -160,7 +161,7 @@ object GuestsCtrl : BaseCtrl() {
                 ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
                 return@Handler
             }
-            if (updatedGuest.plusOneGuestKey == null) {
+            if (!force && updatedGuest.plusOneGuestKey == null) {
                 ctx.fail("Cannot delete this guest. You may only delete guests that where added as a plus one", 400)
                 return@Handler
             }
