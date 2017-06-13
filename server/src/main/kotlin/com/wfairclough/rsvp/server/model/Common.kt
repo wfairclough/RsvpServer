@@ -23,3 +23,9 @@ interface Keyable {
     val key: DbKey?
 }
 
+interface MongoDocument {
+    val _id: MongoID?
+}
+
+interface MongoDocumentKeyable : MongoDocument, Keyable
+

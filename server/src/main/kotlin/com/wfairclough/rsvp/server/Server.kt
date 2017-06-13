@@ -1,5 +1,6 @@
 package com.wfairclough.rsvp.server
 
+import com.wfairclough.rsvp.server.config.Config
 import com.wfairclough.rsvp.server.controllers.GuestsCtrl
 import com.wfairclough.rsvp.server.controllers.InvitationCtrl
 import com.wfairclough.rsvp.server.controllers.MenuCtrl
@@ -19,6 +20,7 @@ object Rsvp {
     val defaultContentType = "application/json"
 
     var staticPath = "public"
+    var adminStaticPath = "public/admin"
     var port = 3000
     var cacheEnabled = true
 
@@ -28,6 +30,10 @@ object Rsvp {
     val rootRouter = Router.router(vertx)
     val apiRouter = Router.router(vertx)
     val invitationsRouter = Router.router(vertx)
+
+    const val KEY_CONFIG = "config"
+
+    private val config by lazy { Config.load() }
 
     fun init() {
         rootInit()
@@ -40,6 +46,7 @@ object Rsvp {
 
         // Set a static server to serve static resources, e.g. the login page
         rootRouter.route().handler(StaticHandler.create(staticPath).setCachingEnabled(cacheEnabled))
+        rootRouter.route("/admin").handler(StaticHandler.create(adminStaticPath).setCachingEnabled(cacheEnabled))
     }
 
     private fun apiInit() {
@@ -48,6 +55,7 @@ object Rsvp {
             ctx.addBodyEndHandler {
                 Log.i("REQ: [${ctx.request().method().name}] (${ctx.response().statusCode}) - ${ctx.normalisedPath()}")
             }
+            ctx.put(KEY_CONFIG, config)
             ctx.next()
         }
         apiRouter.route("/*").consumes(defaultContentType).handler { ctx ->
@@ -57,18 +65,18 @@ object Rsvp {
 
         apiRouter.post("/invitations/create").consumes(defaultContentType).handler(InvitationCtrl.create)
         apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
-        apiRouter.get("/invitations/guests").consumes(defaultContentType).handler(GuestsCtrl.list)
-        apiRouter.get("/invitations/guests/:key").consumes(defaultContentType).handler(GuestsCtrl.get)
+        apiRouter.get("/invitations/guests").handler(GuestsCtrl.list)
+        apiRouter.get("/invitations/guests/:key").handler(GuestsCtrl.get)
         apiRouter.post("/invitations/:code/guests").consumes(defaultContentType).handler(InvitationCtrl.addGuest)
         apiRouter.post("/invitations/:code/guests/:key/add").consumes(defaultContentType).handler(GuestsCtrl.addPlusOne)
         apiRouter.delete("/invitations/:code/guests/:key").consumes(defaultContentType).handler(GuestsCtrl.deletePlusOne)
         apiRouter.delete("/invitations/:code/guests/:key/force").consumes(defaultContentType).handler(GuestsCtrl.deletePlusOne)
         apiRouter.put("/invitations/:code/guests/:key/rsvp").consumes(defaultContentType).handler(GuestsCtrl.rsvp)
         apiRouter.put("/invitations/:code/guests/:key/menu").consumes(defaultContentType).handler(GuestsCtrl.menu)
-        apiRouter.get("/invitations/:code").consumes(defaultContentType).handler(InvitationCtrl.get)
+        apiRouter.get("/invitations/:code").handler(InvitationCtrl.get)
         apiRouter.post("/menu/createitem").consumes(defaultContentType).handler(MenuCtrl.createItem)
-        apiRouter.get("/menu/items/:key").consumes(defaultContentType).handler(MenuCtrl.get)
-        apiRouter.get("/menu/items").consumes(defaultContentType).handler(MenuCtrl.list)
+        apiRouter.get("/menu/items/:key").handler(MenuCtrl.get)
+        apiRouter.get("/menu/items").handler(MenuCtrl.list)
     }
 
     private fun failureInit() {
@@ -104,6 +112,7 @@ fun main(args: Array<String>) {
     val options = Options(args)
 
     options.getArg("path", "public")?.let { Rsvp.staticPath = it }
+    options.getArg("admin-path", "public/admin")?.let { Rsvp.adminStaticPath = it }
 
     if (options.hasArg("version")) {
         Log.i("Version: 1.0")
