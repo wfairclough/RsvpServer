@@ -2,6 +2,7 @@ package com.wfairclough.rsvp.server
 
 import com.wfairclough.rsvp.server.controllers.GuestsCtrl
 import com.wfairclough.rsvp.server.controllers.InvitationCtrl
+import com.wfairclough.rsvp.server.controllers.MenuCtrl
 import com.wfairclough.rsvp.server.utils.Log
 import com.wfairclough.rsvp.server.utils.Options
 import io.vertx.core.Vertx
@@ -58,7 +59,14 @@ object Rsvp {
         apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
         apiRouter.get("/invitations/guests").consumes(defaultContentType).handler(GuestsCtrl.list)
         apiRouter.get("/invitations/guests/:key").consumes(defaultContentType).handler(GuestsCtrl.get)
+        apiRouter.post("/invitations/:code/guests/:key/add").consumes(defaultContentType).handler(GuestsCtrl.addPlusOne)
+        apiRouter.delete("/invitations/:code/guests/:key").consumes(defaultContentType).handler(GuestsCtrl.deletePlusOne)
+        apiRouter.put("/invitations/:code/guests/:key/rsvp").consumes(defaultContentType).handler(GuestsCtrl.rsvp)
+        apiRouter.put("/invitations/:code/guests/:key/menu").consumes(defaultContentType).handler(GuestsCtrl.menu)
         apiRouter.get("/invitations/:code").consumes(defaultContentType).handler(InvitationCtrl.get)
+        apiRouter.post("/menu/createitem").consumes(defaultContentType).handler(MenuCtrl.createItem)
+        apiRouter.get("/menu/items/:key").consumes(defaultContentType).handler(MenuCtrl.get)
+        apiRouter.get("/menu/items").consumes(defaultContentType).handler(MenuCtrl.list)
     }
 
     private fun failureInit() {

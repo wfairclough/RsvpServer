@@ -19,4 +19,7 @@ typealias MongoID = ObjectId
 
 data class ResourceCreated<out T>(val key: DbKey, @Exclude val _data: T)
 
+interface Keyable {
+    val key: DbKey?
+}
 

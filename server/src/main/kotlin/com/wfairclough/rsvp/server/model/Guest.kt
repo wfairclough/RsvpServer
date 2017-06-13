@@ -3,15 +3,17 @@ package com.wfairclough.rsvp.server.model
 /**
  * Created by will on 2017-05-22.
  */
-data class Guest(val key: DbKey? = DbKeyUtils.generate(),
+data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
+                 val invitationKey: DbKey,
                  val firstname: String,
                  val lastname: String,
-                 val menuItem: MenuItem? = null,
+                 val menuItem: GuestMenuItem? = null,
                  val rsvp: Boolean = false,
+                 val plusOne: Boolean = false,
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null,
-                 val invitationKey: String? = null)
+                 val plusOneGuestKey: DbKey? = null) : Keyable
 
 data class Address(val street1: String,
                    val street2: String?,
@@ -28,6 +30,4 @@ enum class Country(val code: String) {
 
 typealias PhoneNo = String
 
-data class MenuItem(val key: DbKey? = null,
-                    val name: String,
-                    val notes: String? = null)
+data class GuestMenuItem(val menuItemKey: DbKey, val notes: String?, val menuItem: MenuItem? = null)

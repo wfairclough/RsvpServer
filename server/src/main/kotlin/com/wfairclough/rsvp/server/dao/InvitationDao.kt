@@ -44,4 +44,6 @@ class InvitationDao : BaseDao<Invitation>() {
         return collection.find("{'guests.key': '$key'}").flatMap { it.guests }.firstOrNull()
     }
 
+    fun findByCode(code: String): Invitation? = collection.findOne("{'code': '$code'}")
+
 }

@@ -6,12 +6,12 @@ import org.joda.time.DateTime
  * Created by will on 2017-05-22.
  */
 data class Invitation(val _id: MongoID? = null,
-                      var key: DbKey = DbKeyUtils.generate(),
+                      override var key: DbKey = DbKeyUtils.generate(),
                       val code: String,
                       val viewed: Boolean = false,
                       val sent: Boolean = false,
                       val guests: List<Guest>,
-                      val visits: List<VisitRecord>? = null)
+                      val visits: List<VisitRecord>? = null) : Keyable
 
 data class VisitRecord(val datetime: DateTime,
                        val userAgent: String?)

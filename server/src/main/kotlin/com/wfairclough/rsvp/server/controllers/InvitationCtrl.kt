@@ -13,7 +13,7 @@ import io.vertx.ext.web.RoutingContext
 object InvitationCtrl : BaseCtrl() {
 
     data class CreateInvitationReq(val code: String, val guest: InvitationGuest, val force: Boolean = false)
-    data class InvitationGuest(val firstname: String, val lastname: String, val email: String?) {
+    data class InvitationGuest(val firstname: String, val lastname: String, val email: String?, val plusOne: Boolean = false) {
         val fullname: String
             get() = "$firstname $lastname"
     }
@@ -42,6 +42,7 @@ object InvitationCtrl : BaseCtrl() {
                     firstname = reqJson.guest.firstname,
                     lastname = reqJson.guest.lastname,
                     email = reqJson.guest.email,
+                    plusOne = reqJson.guest.plusOne,
                     invitationKey = inviteKey)
             val invitation = Invitation(key = inviteKey, code = reqJson.code, guests = listOf(mainGuest))
 

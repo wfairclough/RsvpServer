@@ -5,6 +5,7 @@ import com.google.gson.FieldAttributes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.wfairclough.rsvp.server.dao.InvitationDao
+import com.wfairclough.rsvp.server.dao.MenuDao
 import com.wfairclough.rsvp.server.json.ExcludeJson
 import com.wfairclough.rsvp.server.json.Serializer
 import io.vertx.core.http.HttpServerRequest
@@ -19,6 +20,8 @@ open class BaseCtrl {
     protected val gson by lazy { Global.gson }
 
     protected val invitationDao by lazy { InvitationDao() }
+
+    protected val menuDao by lazy { MenuDao() }
 }
 
 object Global {
