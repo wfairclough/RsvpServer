@@ -45,9 +45,9 @@ $(document).ready(function(){
     // ANIMATED ONLY IF NOT AT TOP OF PAGE ON LOAD //
     var $win = $(window);
     if ($win.scrollTop() == 0)
-        jQuery('.navbar-fixed-top').addClass('wow');
+      jQuery('.navbar-fixed-top').addClass('wow');
     else if ($win.height() + $win.scrollTop() == $(document).height()) {
-         jQuery('.navbar-fixed-top').removeClass('wow');
+      jQuery('.navbar-fixed-top').removeClass('wow');
     }
 
     // ADD SLIDEDOWN ANIMATION TO DROPDOWN //
