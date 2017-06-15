@@ -364,7 +364,7 @@
                                 <input type="text" v-model="rsvpCode" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
                                 <input class="btn btn-primary mt5" type="submit" name="submitRsvpCode" value="Submit" />
                             </form>
-                            <div id="invitation" class="row" v-else-if="(!isFetching && stage === 'invite')">
+                            <div id="invitation" class="" v-else-if="(!isFetching && stage === 'invite')">
                                 <p v-show="false">Code: {{invitation.code}}</p>
 
                                 <h5>Together with our parents</h5>
@@ -382,8 +382,13 @@
                                         v-bind:index="index"
                                         v-bind:menu="menu"
                                         v-bind:key="guest.key"
-                                        v-on:update-invitation="updateInvitation" />
+                                        v-on:update-invitation="updateInvitation">
+                                </guest>
                                 
+                                <div class="invalid-invite">
+                                    <p>Please be sure you have answered all the questions for each guest.</p>
+                                </div>
+
                             </div>
                         </div>
                     </div>

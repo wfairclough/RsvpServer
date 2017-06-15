@@ -78,6 +78,7 @@ object Rsvp {
         apiRouter.get("/invitations/guests/:key").handler(GuestsCtrl.get)
         apiRouter.post("/invitations/:code/guests").consumes(defaultContentType).handler(InvitationCtrl.addGuest)
         apiRouter.post("/invitations/:code/guests/:key/add").consumes(defaultContentType).handler(GuestsCtrl.addPlusOne)
+        apiRouter.put("/invitations/:code/guests/:key/noplusone").consumes(defaultContentType).handler(GuestsCtrl.noPlusOne)
         apiRouter.delete("/invitations/:code/guests/:key").handler(GuestsCtrl.deletePlusOne)
         apiRouter.delete("/invitations/:code/guests/:key/force").handler(GuestsCtrl.deletePlusOne)
         apiRouter.put("/invitations/:code/guests/:key/rsvp").consumes(defaultContentType).handler(GuestsCtrl.rsvp)

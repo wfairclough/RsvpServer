@@ -84,13 +84,18 @@ Vue.component('guest', {
       isAddingGuest: false,
       applied: false,
       guestOf: null,
-      selectedMenuItem: null
+      selectedMenuItem: null,
+      plusOne: null
     }
   },
   created: function() {
     if (this.guest.justAdded) {
       this.toggleAppliedCover();
     }
+    this.plusOne = this.getAddedGuest();
+  },
+  updated: function() {
+    this.plusOne = this.getAddedGuest();
   },
   watch: {
     selectedMenuItem: function(newMenuItem) {
@@ -140,6 +145,7 @@ Vue.component('guest', {
           console.log(rsp);
           vm.$emit('update-invitation', rsp.data);
           vm.toggleAppliedCover();
+          vm.isAddingGuest = false;
         })
         .catch(function(err) {
           console.error(err);
@@ -152,12 +158,25 @@ Vue.component('guest', {
     removePlusOne: function() {
       console.log('removePlusOne');
       var vm = this;
-      this.isAddingGuest = false;
       var invitedGuest = this.getInvitedGuest();
       if (invitedGuest !== null) {
         axios.delete('/api/invitations/'+this.invitation.code+'/guests/'+invitedGuest.key)
         .then(function(rsp) {
           console.log(rsp);
+          vm.plusOne = null;
+          vm.$emit('update-invitation', rsp.data);
+          vm.toggleAppliedCover();
+          vm.isAddingGuest = false;
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+      } else {
+        // Lets let the server know that this guest has selected 'No' to bringing a guest
+        axios.put('/api/invitations/'+this.invitation.code+'/guests/'+this.guest.key+'/noplusone', {hasPlusOne: false})
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.plusOne = null;
           vm.$emit('update-invitation', rsp.data);
           vm.toggleAppliedCover();
         })
@@ -166,11 +185,14 @@ Vue.component('guest', {
         });
       }
     },
-    hasAddedGuest: function() {
+    getAddedGuest: function() {
       var vm = this;
       return vm.guest.plusOne && vm.invitation.guests.reduce(function(acc, g) {
-        return vm.isAddingGuest || acc || (g.plusOneGuestKey === vm.guest.key);
-      }, false);
+        if (g.plusOneGuestKey === vm.guest.key) {
+          acc = g;
+        }
+        return acc;
+      }, null);
     },
     guestAdded: function(data) {
       console.log('guest added: ');
@@ -209,14 +231,16 @@ Vue.component('guest', {
       <h5 class="guest-name">{{guest.firstname + ' ' + guest.lastname}}<span v-if="guest.plusOneGuestKey !== undefined">(Guest of {{ getGuestOf().firstname }})</span></h5>
       <div class="question will-attend" v-if="guest.plusOneGuestKey === undefined">
           <p>Will {{guest.firstname}} be attending?</p>
-          <a class="answer" v-on:click="rsvp" v-bind:class="{ selected: guest.rsvp }">Yes</a>
-          <a class="answer" v-on:click="unrsvp" v-bind:class="{ selected: !guest.rsvp }">No</a>
+          <div class="answers" v-bind:class="{ invalid: (guest.rsvp === undefined) }">
+            <a class="answer" v-on:click="rsvp" v-bind:class="{ selected: guest.rsvp === true }">Yes</a>
+            <a class="answer" v-on:click="unrsvp" v-bind:class="{ selected: guest.rsvp === false }">No</a>
+          </div>
       </div>
       
       <hr v-if="guest.rsvp && guest.plusOneGuestKey === undefined"/>
       <div class="question select-meal" v-if="guest.rsvp">
           <p>Please select {{guest.firstname}}'s choice entr&eacute;e?</p>
-          <div class="menu">
+          <div class="menu" v-bind:class="{ invalid: (guest.menuItem === undefined) }">
             <div class="menu-item" 
               v-for="item in menu.items" 
               v-bind:class="{ selected: isSelectedMenuItem(item) }"
@@ -227,15 +251,18 @@ Vue.component('guest', {
           </div>
       </div>
       
-      <hr v-if="guest.plusOne"/>
-      <div class="question plus-one" v-if="guest.plusOne">
+      <hr v-if="guest.plusOne && guest.rsvp"/>
+      <div class="question plus-one" v-if="guest.plusOne && guest.rsvp">
           <p>Will {{guest.firstname}} be bringing a guest?</p>
-          <a class="answer" v-on:click="addPlusOne" v-bind:class="{ selected: hasAddedGuest() }">Yes</a>
-          <a class="answer" v-on:click="removePlusOne" v-bind:class="{ selected: !hasAddedGuest() }">No</a>
-          <add-guest  v-if="(isAddingGuest && !guest.hasAddedPlusOne)"
-                      v-on:guest-added="guestAdded"
-                      v-bind:invitationCode="invitation.code" 
-                      v-bind:addedByGuest="guest" />
+          <div class="answers" v-bind:class="{ invalid: (guest.hasAddedPlusOne === undefined) }">
+            <a class="answer" v-on:click="addPlusOne" v-bind:class="{ selected: (guest.hasAddedPlusOne === true || (guest.hasAddedPlusOne === undefined && isAddingGuest)) }">Yes</a>
+            <a class="answer" v-on:click="removePlusOne" v-bind:class="{ selected: guest.hasAddedPlusOne === false }">No</a>
+            <p v-if="plusOne !== null">({{ plusOne.firstname + ' ' + plusOne.lastname }})</p>
+            <add-guest  v-if="(isAddingGuest && !guest.hasAddedPlusOne)"
+                        v-on:guest-added="guestAdded"
+                        v-bind:invitationCode="invitation.code" 
+                        v-bind:addedByGuest="guest" />
+          </div>
       </div>
 
   </div>

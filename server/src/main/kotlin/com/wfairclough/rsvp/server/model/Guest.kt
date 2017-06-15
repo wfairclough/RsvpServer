@@ -8,9 +8,9 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
                  val firstname: String,
                  val lastname: String,
                  val menuItem: GuestMenuItem? = null,
-                 val rsvp: Boolean = false,
+                 val rsvp: Boolean? = null,
                  val plusOne: Boolean = false,
-                 val hasAddedPlusOne: Boolean = false,
+                 val hasAddedPlusOne: Boolean? = null,
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null,
@@ -20,7 +20,7 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
         val guestCompareBy: Comparator<Guest>
             get() = compareBy(
                     { it.plusOneGuestKey?.let { 1 } ?: 0 },
-                    { it.plusOne },
+                    { it.plusOne.toInt() },
                     { it.lastname },
                     { it.firstname })
     }

@@ -1743,12 +1743,20 @@ footer.white-wrapper .social-links li a {
     padding: 0 20px;
 }
 
+.invalid {
+    border-width: 1px;
+    border-color: red;
+    border-style: dashed;
+    margin: 0 30px;
+}
+
 .menu-item {
     cursor: pointer;
     cursor: hand;
     border-width: 1px;
     border-color: rgba(255, 255, 255, 0);
     border-style: solid;
+    margin: 3px 0;
 }
 
 .menu-item:hover {
@@ -1756,10 +1764,16 @@ footer.white-wrapper .social-links li a {
 }
 
 .menu-item.selected {
-    border-width: 2px;
+    border-width: 1px;
     border-color: #98b5a1;
-    border-style: dashed;
+    border-style: dotted;
+    /*font-weight: bold;*/
 }
+
+.invalid-invite {
+    color: red;
+}
+
 
 
 

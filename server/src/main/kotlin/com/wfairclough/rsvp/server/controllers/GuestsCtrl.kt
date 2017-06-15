@@ -2,6 +2,8 @@ package com.wfairclough.rsvp.server.controllers
 
 import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.GuestMenuItem
+import com.wfairclough.rsvp.server.model.Invitation
+import com.wfairclough.rsvp.server.utils.Log
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
 
@@ -46,7 +48,7 @@ object GuestsCtrl : BaseCtrl() {
                 ctx.fail("The guest with key '$guestKey' does not have a plus one", 400)
                 return@Handler
             }
-            if (guest.hasAddedPlusOne) {
+            if (guest.hasAddedPlusOne == true) {
                 ctx.fail("The guest with key '$guestKey' has already added their plus one", 400)
                 return@Handler
             }
@@ -73,6 +75,39 @@ object GuestsCtrl : BaseCtrl() {
         } ?: ctx.fail("Cannot find guest with key: $guestKey", 404)
     }
 
+    data class PlusOneRequest(val hasPlusOne: Boolean = false)
+
+    val noPlusOne  = Handler<RoutingContext> { ctx ->
+        val guestKey = ctx.pathParam("key") ?: ""
+        if (guestKey.isBlank()) {
+            ctx.fail("Must include a non-blank guest key", 400)
+            return@Handler
+        }
+        val inviteCode = ctx.pathParam("code") ?: ""
+        if (inviteCode.isBlank()) {
+            ctx.fail("Must include valid invite code", 400)
+            return@Handler
+        }
+        val rsvpJson = ctx.bodyAsOrFail(PlusOneRequest::class.java)
+        if (rsvpJson == null) {
+            ctx.fail("Could not parse Plus One Request", 400)
+            return@Handler
+        }
+        val invite = invitationDao.findByCode(inviteCode)
+        invite?.let {
+            val parts = invite.guests.partition { it.key == guestKey }
+            val updatedGuest = parts.first.firstOrNull()?.copy(hasAddedPlusOne = rsvpJson.hasPlusOne)
+            if (updatedGuest == null) {
+                ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
+                return@Handler
+            }
+            val updatesGuests = listOf(updatedGuest) + parts.second
+            invitationDao.update(invite.copy(guests = updatesGuests))?.apply {
+                ctx.response().success(this.sortedCopy())
+            } ?: ctx.fail("Could not update invitation with updated guest", 500)
+        } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
+    }
+
     data class RsvpRequest(val rsvp: Boolean = true)
 
     val rsvp = Handler<RoutingContext> { ctx ->
@@ -95,15 +130,24 @@ object GuestsCtrl : BaseCtrl() {
         val invite = invitationDao.findByCode(inviteCode)
         invite?.let {
             val parts = invite.guests.partition { it.key == guestKey }
-            val updatedGuest = parts.first.firstOrNull()?.copy(rsvp = rsvpJson.rsvp)
-            if (updatedGuest == null) {
+            val guest = parts.first.firstOrNull()
+            if (guest == null) {
                 ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
                 return@Handler
             }
-            val updatesGuests = listOf(updatedGuest) + parts.second
-            invitationDao.update(invite.copy(guests = updatesGuests))?.apply {
-                ctx.response().success(this.sortedCopy())
+            val updatedGuest = when (rsvpJson.rsvp) {
+                true -> guest.copy(rsvp = rsvpJson.rsvp)
+                false -> guest.copy(rsvp = rsvpJson.rsvp, hasAddedPlusOne = null)
             }
+            val updatedGuests = listOf(updatedGuest) + parts.second
+            // We must remove the plus one if we are unrsvping
+            val newInvite = when (guest.hasAddedPlusOne) {
+                true -> invite.copy(guests = updatedGuests.filterNot { it.plusOneGuestKey == guestKey })
+                else -> invite.copy(guests = updatedGuests)
+            }
+            invitationDao.update(newInvite)?.apply {
+                ctx.response().success(this.sortedCopy())
+            } ?: ctx.fail("Could not update invitation with updated guest", 500)
         } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
 
     }
@@ -159,23 +203,31 @@ object GuestsCtrl : BaseCtrl() {
             ctx.fail("Must include valid invite code", 400)
             return@Handler
         }
+        removePlusOneWith(inviteCode, guestKey, ctx, force)
+    }
+
+    private fun removePlusOneWith(inviteCode: String, guestKey: String, ctx: RoutingContext? = null, force: Boolean = false): Invitation? {
+        Log.d("removePlusOneWith $inviteCode  $guestKey ")
         val invite = invitationDao.findByCode(inviteCode)
         invite?.let {
             val parts = invite.guests.partition { it.key == guestKey }
             val updatedGuest = parts.first.firstOrNull()
             if (updatedGuest == null) {
-                ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
-                return@Handler
+                ctx?.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
+                return null
             }
             if (!force && updatedGuest.plusOneGuestKey == null) {
-                ctx.fail("Cannot delete this guest. You may only delete guests that where added as a plus one", 400)
-                return@Handler
+                ctx?.fail("Cannot delete this guest. You may only delete guests that where added as a plus one", 400)
+                return null
             }
             val parts2 = parts.second.partition { it.key == updatedGuest.plusOneGuestKey }
             val ownerGuest = parts2.first.firstOrNull()?.let { listOf(it.copy(hasAddedPlusOne = false)) } ?: listOf()
             invitationDao.update(it.copy(guests = parts2.second + ownerGuest))?.apply {
-                ctx.response().success(this.sortedCopy())
-            }
-        } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
+                val ret = this.sortedCopy()
+                ctx?.response()?.success(ret)
+                return ret
+            } ?: ctx?.fail("Could not update invite ($inviteCode) with updated guest list", 500)
+        } ?: ctx?.fail("Could not find invite with code: $inviteCode", 404)
+        return null
     }
 }

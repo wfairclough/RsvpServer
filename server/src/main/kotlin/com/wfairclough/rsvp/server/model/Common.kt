@@ -28,3 +28,4 @@ interface MongoDocument {
 
 interface MongoDocumentKeyable : MongoDocument, Keyable
 
+fun Boolean.toInt(): Int = if (this) 1 else 0
