@@ -10,18 +10,20 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
                  val menuItem: GuestMenuItem? = null,
                  val rsvp: Boolean = false,
                  val plusOne: Boolean = false,
+                 val hasAddedPlusOne: Boolean = false,
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null,
                  val plusOneGuestKey: DbKey? = null) : Keyable {
-    val sortValue: Int
-        get() {
-            var hash = 1
-            hash = hash * 17 + lastname.hashCode()
-            hash = hash * 31 + firstname.hashCode()
-            hash = hash * 13 + (email?.hashCode() ?: 0)
-            return hash
-        }
+
+    companion object {
+        val guestCompareBy: Comparator<Guest>
+            get() = compareBy(
+                    { it.plusOneGuestKey?.let { 1 } ?: 0 },
+                    { it.plusOne },
+                    { it.lastname },
+                    { it.firstname })
+    }
 }
 
 data class Address(val street1: String,

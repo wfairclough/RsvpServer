@@ -60,10 +60,19 @@ Vue.component('guest', {
   props: ['invitation', 'guest', 'index'],
   data: function() {
     return {
-      isAddingGuest: false
+      isAddingGuest: false,
+      applied: false,
+      guestOf: null
     }
   },
   methods: {
+    toggleAppliedCover: function() {
+      var vm = this;
+      vm.applied = true;
+      setTimeout(function() {
+        vm.applied = false;
+      }, 1000);
+    },
     rsvp: function() {
       console.log('rsvp');
       var vm = this;
@@ -71,6 +80,7 @@ Vue.component('guest', {
         .then(function(rsp) {
           console.log(rsp);
           vm.$emit('update-invitation', rsp.data);
+          vm.toggleAppliedCover();
         })
         .catch(function(err) {
           console.error(err);
@@ -83,6 +93,7 @@ Vue.component('guest', {
         .then(function(rsp) {
           console.log(rsp);
           vm.$emit('update-invitation', rsp.data);
+          vm.toggleAppliedCover();
         })
         .catch(function(err) {
           console.error(err);
@@ -94,21 +105,59 @@ Vue.component('guest', {
     },
     removePlusOne: function() {
       console.log('removePlusOne');
+      var vm = this;
       this.isAddingGuest = false;
+      var invitedGuest = this.getInvitedGuest();
+      if (invitedGuest !== null) {
+        axios.delete('/api/invitations/'+this.invitation.code+'/guests/'+invitedGuest.key)
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.$emit('update-invitation', rsp.data);
+          vm.toggleAppliedCover();
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
+      }
     },
     hasAddedGuest: function() {
       var vm = this;
       return vm.guest.plusOne && vm.invitation.guests.reduce(function(acc, g) {
         return vm.isAddingGuest || acc || (g.plusOneGuestKey === vm.guest.key);
       }, false);
+    },
+    guestAdded: function(data) {
+      console.log('guest added: ');
+      console.log(data.newGuest);
+      this.toggleAppliedCover();
+      this.$emit('update-invitation', data.invitation);
+    },
+    getInvitedGuest: function() {
+      var vm = this;
+      var invitedGuests = vm.invitation.guests.filter(function(g) {
+        return g.plusOneGuestKey === vm.guest.key;
+      });
+      if (invitedGuests.length > 0) {
+        return invitedGuests[0];
+      }
+      return null;
+    },
+    getGuestOf: function() {
+      var vm = this;
+      return vm.invitation.guests.filter(function(g) {
+        return g.key === vm.guest.plusOneGuestKey;
+      })[0];
     }
   },
   // just like data, the prop can be used inside templates
   // and is also made available in the vm as this.message
   template: `
   <div class="invitation-guest">
-      <h5>{{guest.firstname + ' ' + guest.lastname}}</h5>
-      <div class="question will-attend">
+      <transition name="fade">
+        <div class="updated-cover" v-if="applied"><i class="title fa fa-check-circle"></i></div>
+      </transition>
+      <h5 class="guest-name">{{guest.firstname + ' ' + guest.lastname}}<span v-if="guest.plusOneGuestKey !== undefined">(Guest of {{ getGuestOf().firstname }})</span></h5>
+      <div class="question will-attend" v-if="guest.plusOneGuestKey === undefined">
           <p>Will {{guest.firstname}} be attending?</p>
           <a class="answer" v-on:click="rsvp" v-bind:class="{ selected: guest.rsvp }">Yes</a>
           <a class="answer" v-on:click="unrsvp" v-bind:class="{ selected: !guest.rsvp }">No</a>
@@ -119,9 +168,10 @@ Vue.component('guest', {
           <p>Will {{guest.firstname}} be bringing a guest?</p>
           <a class="answer" v-on:click="addPlusOne" v-bind:class="{ selected: hasAddedGuest() }">Yes</a>
           <a class="answer" v-on:click="removePlusOne" v-bind:class="{ selected: !hasAddedGuest() }">No</a>
-          <add-guest  v-if="isAddingGuest"
+          <add-guest  v-if="(isAddingGuest && !guest.hasAddedPlusOne)"
+                      v-on:guest-added="guestAdded"
                       v-bind:invitationCode="invitation.code" 
-                      v-bind:addedByGuest="guest.key" />
+                      v-bind:addedByGuest="guest" />
       </div>
       
       <!-- <p v-if="index < invitation.guests.length - 1">AND</p> -->
@@ -140,7 +190,24 @@ Vue.component('add-guest', {
   },
   methods: {
     addGuest: function() {
-
+      var vm = this;
+      var guest = {
+        firstname: this.firstname,
+        lastname: this.lastname,
+        guestOf: this.addedByGuest,
+        invitationCode: this.invitationCode
+      };
+      axios.post('/api/invitations/'+this.invitationCode+'/guests/'+this.addedByGuest.key+'/add', guest)
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.$emit('guest-added', {
+            newGuest: guest,
+            invitation: rsp.data
+          })
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
     }
   },
   template: `

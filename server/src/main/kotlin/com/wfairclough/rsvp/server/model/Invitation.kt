@@ -14,7 +14,7 @@ data class Invitation(override val _id: MongoID? = null,
                       val guests: List<Guest>,
                       val visits: List<VisitRecord>? = null) : MongoDocumentKeyable {
     fun sortedCopy(): Invitation {
-        return this.copy(guests = this.guests.sortedBy { it.sortValue })
+        return this.copy(guests = this.guests.sortedWith(Guest.guestCompareBy))
     }
 }
 

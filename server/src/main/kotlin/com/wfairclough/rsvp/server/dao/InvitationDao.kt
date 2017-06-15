@@ -42,7 +42,7 @@ class InvitationDao : BaseDao<Invitation>() {
     }
 
     fun findGuestByKey(key: String): Guest? {
-        return collection.find("{'guests.key': '$key'}").flatMap { it.guests }.firstOrNull()
+        return collection.find("{'guests.key': '$key'}").flatMap { it.guests }.firstOrNull { it.key == key }
     }
 
     fun findByCode(code: String): Invitation? = collection.findOne("{'code': '$code'}")

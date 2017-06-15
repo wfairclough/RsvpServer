@@ -22,7 +22,7 @@ object GuestsCtrl : BaseCtrl() {
         val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
         val guests = invitationDao.findAllGuests(skip, limit, rsvp)
-        ctx.response().success(guests.sortedBy { it.sortValue })
+        ctx.response().success(guests.sortedWith(Guest.guestCompareBy))
     }
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
@@ -46,10 +46,14 @@ object GuestsCtrl : BaseCtrl() {
                 ctx.fail("The guest with key '$guestKey' does not have a plus one", 400)
                 return@Handler
             }
+            if (guest.hasAddedPlusOne) {
+                ctx.fail("The guest with key '$guestKey' has already added their plus one", 400)
+                return@Handler
+            }
             invitationDao.findByKey(guest.invitationKey)?.let { invitation ->
                 val oldGuests = invitation.guests.map { g ->
                     if (g.key == guestKey) {
-                        return@map g.copy(plusOne = false)
+                        return@map g.copy(hasAddedPlusOne = true)
                     }
                     return@map g
                 }
@@ -57,6 +61,7 @@ object GuestsCtrl : BaseCtrl() {
                         firstname = plusOneGuest.firstname,
                         lastname = plusOneGuest.lastname,
                         email = plusOneGuest.email,
+                        rsvp = true, // Assume they are coming since they are a guest of a guest
                         invitationKey = invitation.key,
                         plusOneGuestKey = guest.key
                 )
@@ -167,7 +172,7 @@ object GuestsCtrl : BaseCtrl() {
                 return@Handler
             }
             val parts2 = parts.second.partition { it.key == updatedGuest.plusOneGuestKey }
-            val ownerGuest = parts2.first.firstOrNull()?.let { listOf(it.copy(plusOne = true)) } ?: listOf()
+            val ownerGuest = parts2.first.firstOrNull()?.let { listOf(it.copy(hasAddedPlusOne = false)) } ?: listOf()
             invitationDao.update(it.copy(guests = parts2.second + ownerGuest))?.apply {
                 ctx.response().success(this.sortedCopy())
             }
