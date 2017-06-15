@@ -38,7 +38,7 @@ body {
 }
 
 .theme-accent-color {
-    color: #C10E1F;
+    color: #98B5A1;
 }
 
 .text-muted {
@@ -75,7 +75,7 @@ a:hover,
 a:focus,
 a:active,
 a.active {
-    color: #C10E1F
+    color: #98B5A1
 }
 
 h1,
@@ -254,8 +254,8 @@ body {
 
 .thin-hr:before {
     font-family: 'FontAwesome';
-    content: "\f004";
-    color: #C10E1F;
+    content: "\f06c";
+    color: #98B5A1;
     position: absolute;
     width: 180px;
     margin-left: -80px;
@@ -514,7 +514,7 @@ fieldset[disabled] .btn-primary.active {
 
 .navbar-default .navbar-nav>.active>a:hover,
 .navbar-default .navbar-nav>.active>a:focus {
-    color: #C10E1F;
+    color: #98B5A1;
     background-color: transparent;
 }
 
