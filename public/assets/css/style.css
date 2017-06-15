@@ -210,6 +210,14 @@ h6 {
     margin-bottom: 0
 }
 
+.mt5 {
+    margin-top: 5px
+}
+
+.mt10 {
+    margin-top: 10px
+}
+
 .mt20 {
     margin-top: 20px
 }
@@ -1611,4 +1619,87 @@ footer.white-wrapper .social-links li a {
 #instafeed img {
     width: 16.666666%;
 }
+
+#invitation {
+    background-image: url("https://www.transparenttextures.com/patterns/white-linen.png"); 
+    background-color: '#ede5d0';
+    border-radius: 6px;
+    padding: 20px;
+    border-width: 2px;
+    border-color: #e6e6e6;
+    border-style: solid;
+
+    text-align: center;
+    display: block;
+}
+
+.invitation-guest {
+    max-width: 60%;
+    border-radius: 4px;
+    border-width: 2px;
+    border-color: #e6e6e6;
+    border-style: solid;
+    display: block;
+    margin: 5px auto;
+}
+
+.invitation-guest .question {
+    font-style: italic;
+}
+
+.invitation-guest .will-attend {
+
+}
+
+.invitation-guest .plus-one {
+    
+}
+
+.invitation-guest a.answer {
+    color: #72a3e4;
+    cursor: pointer;
+    cursor: hand;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.invitation-guest a.answer.selected {
+    font-weight: bold;
+    color: #6095dc;
+}
+
+.invitation-guest hr {
+    margin: 3px 110px;
+    border: 0;
+    border-top: 1px solid #c7c3c3;
+}
+
+.add-guest {
+    display: block;
+    padding: 2px;
+}
+
+.add-guest-form {
+    display: block;
+    margin: 5px auto;
+}
+
+.add-guest-form input.form-control {
+    background-color: white;
+    padding: 2px 10px;
+    height: 30px;
+    font-size: 10px;
+    margin: 6px;
+}
+
+.add-guest-form input.form-control:focus {
+    background-color: white;
+}
+
+.add-guest-submit {
+    padding: 5px 20px;
+    background-color: whitesmoke;
+}
+
+
 

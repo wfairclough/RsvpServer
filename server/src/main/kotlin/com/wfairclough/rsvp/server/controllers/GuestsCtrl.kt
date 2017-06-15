@@ -22,7 +22,7 @@ object GuestsCtrl : BaseCtrl() {
         val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
         val guests = invitationDao.findAllGuests(skip, limit, rsvp)
-        ctx.response().success(guests)
+        ctx.response().success(guests.sortedBy { it.sortValue })
     }
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
@@ -61,8 +61,9 @@ object GuestsCtrl : BaseCtrl() {
                         plusOneGuestKey = guest.key
                 )
                 val invite = invitation.copy(guests = oldGuests + listOf(newGuest))
-                val updatedInvite = invitationDao.update(invite)
-                ctx.response().success(updatedInvite)
+                invitationDao.update(invite)?.apply {
+                    ctx.response().success(this.sortedCopy())
+                } ?: ctx.fail("Could not update invitation with new guest", 500)
             } ?: ctx.fail("Cannot find invitation with key: ${guest.invitationKey}", 404)
         } ?: ctx.fail("Cannot find guest with key: $guestKey", 404)
     }
@@ -96,7 +97,7 @@ object GuestsCtrl : BaseCtrl() {
             }
             val updatesGuests = listOf(updatedGuest) + parts.second
             invitationDao.update(invite.copy(guests = updatesGuests))?.apply {
-                ctx.response().success(this)
+                ctx.response().success(this.sortedCopy())
             }
         } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
 
@@ -135,7 +136,7 @@ object GuestsCtrl : BaseCtrl() {
             }
             val updatesGuests = listOf(updatedGuest) + parts.second
             invitationDao.update(invite.copy(guests = updatesGuests))?.apply {
-                ctx.response().success(this)
+                ctx.response().success(this.sortedCopy())
             }
         } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
 
@@ -168,7 +169,7 @@ object GuestsCtrl : BaseCtrl() {
             val parts2 = parts.second.partition { it.key == updatedGuest.plusOneGuestKey }
             val ownerGuest = parts2.first.firstOrNull()?.let { listOf(it.copy(plusOne = true)) } ?: listOf()
             invitationDao.update(it.copy(guests = parts2.second + ownerGuest))?.apply {
-                ctx.response().success(this)
+                ctx.response().success(this.sortedCopy())
             }
         } ?: ctx.fail("Could not find invite with code: $inviteCode", 404)
     }

@@ -81,7 +81,7 @@ object InvitationCtrl : BaseCtrl() {
                     invitationKey = this.key)
             val updated = this.copy(guests = this.guests + listOf(guest))
             invitationDao.update(updated)?.apply {
-                ctx.response().success(this)
+                ctx.response().success(this.sortedCopy())
             } ?: ctx.fail("Failed to add new guest to invitation with code: $inviteCode", 500)
         } ?: ctx.fail("Could not find invitation with code: $inviteCode", 404)
     }
@@ -97,7 +97,7 @@ object InvitationCtrl : BaseCtrl() {
         }
         val ret = invitationDao.findFirst { it.code == code}
         ret?.let {
-            ctx.response().success(ret)
+            ctx.response().success(ret.sortedCopy())
         } ?: ctx.fail("Could not find invitation with code: $code", 404)
     }
 
@@ -105,7 +105,7 @@ object InvitationCtrl : BaseCtrl() {
         val queryJson = ctx.bodyAsOrFail(InvitationQuery::class.java) ?: return@Handler
         val ret = invitationDao.findFirst { it.code == queryJson.query}
         ret?.let {
-            ctx.response().success(ret)
+            ctx.response().success(ret.sortedCopy())
         } ?: ctx.fail("Could not find invitation with code: ${queryJson.query}", 404)
     }
 

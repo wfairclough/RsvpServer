@@ -185,7 +185,7 @@
             </div>
         </section>
 
-     	<section id="wedding-date"class="light-wrapper">
+     	<section id="wedding-date" class="light-wrapper">
             <div class="section-inner">
                 <div class="wow fadeIn">
     				<div class="container text-center">
@@ -358,12 +358,33 @@
                     <hr class="col-sm-12 thin-hr" />
 
                     <div class="col-sm-10 col-sm-offset-1 section-inner">
+                        <div id="message"></div>
+                        <div id="rsvpFroms">
+                            <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
+                                <input type="text" v-model="rsvpCode" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
+                                <input class="btn btn-primary mt5" type="submit" name="submitRsvpCode" value="Submit" />
+                            </form>
+                            <div id="invitation" class="row" v-else-if="(!isFetching && stage === 'invite')">
+                                <p v-show="false">Code: {{invitation.code}}</p>
 
-                    <div id="message"></div>
-                        <form id="rsvpCodeFrom" class="main-contact-form wow fadeIn" data-wow-delay="0.2s">
-                            <input type="text" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
-                            <input class="btn btn-primary mt30" type="submit" name="submit" value="Submit" />
-                        </form>
+                                <h5>Together with our parents</h5>
+                                <br/>
+                                <h4>Katrina Butler</h4>
+                                <h5>and</h5>
+                                <h4>William Fairclough</h4>
+                                <br/>
+                                <h4>Would like to invite:</h4>
+                                <br/>
+
+                                <guest  v-for="(guest, index) in invitation.guests" 
+                                        v-bind:invitation="invitation" 
+                                        v-bind:guest="guest" 
+                                        v-bind:index="index" 
+                                        v-bind:key="guest.key"
+                                        v-on:update-invitation="updateInvitation" />
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

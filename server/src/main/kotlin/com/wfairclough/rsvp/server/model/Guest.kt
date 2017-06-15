@@ -13,7 +13,16 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null,
-                 val plusOneGuestKey: DbKey? = null) : Keyable
+                 val plusOneGuestKey: DbKey? = null) : Keyable {
+    val sortValue: Int
+        get() {
+            var hash = 1
+            hash = hash * 17 + lastname.hashCode()
+            hash = hash * 31 + firstname.hashCode()
+            hash = hash * 13 + (email?.hashCode() ?: 0)
+            return hash
+        }
+}
 
 data class Address(val street1: String,
                    val street2: String?,

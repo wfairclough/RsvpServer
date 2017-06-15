@@ -22,7 +22,7 @@ class InvitationDao : BaseDao<Invitation>() {
             collection.insertOne(invitation)
             return collection.findOne("{code: '${invitation.code}'}")?.let {
                 Log.i("Found the record for code ${invitation.code}")
-                ResourceCreated(it.key, it)
+                ResourceCreated(it.key, it.sortedCopy())
             }
         } catch (e: MongoException) {
             Log.e("Error: ${e.message}")

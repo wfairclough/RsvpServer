@@ -10,8 +10,13 @@ data class Invitation(override val _id: MongoID? = null,
                       val code: String,
                       val viewed: Boolean = false,
                       val sent: Boolean = false,
+                      val songRequest: String? = null,
                       val guests: List<Guest>,
-                      val visits: List<VisitRecord>? = null) : MongoDocumentKeyable
+                      val visits: List<VisitRecord>? = null) : MongoDocumentKeyable {
+    fun sortedCopy(): Invitation {
+        return this.copy(guests = this.guests.sortedBy { it.sortValue })
+    }
+}
 
 data class VisitRecord(val datetime: DateTime,
                        val userAgent: String?)
