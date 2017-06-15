@@ -13,6 +13,9 @@ import io.vertx.ext.web.handler.StaticHandler
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.joda.JodaModule
+import org.litote.kmongo.util.KMongoConfiguration
 
 
 object Rsvp {
@@ -36,9 +39,15 @@ object Rsvp {
     private val config by lazy { Config.load() }
 
     fun init() {
+        initKMongoConfig()
         rootInit()
         apiInit()
         failureInit()
+    }
+
+    private fun initKMongoConfig() {
+        KMongoConfiguration.bsonMapper.registerModule(JodaModule())
+        KMongoConfiguration.extendedJsonMapper.registerModule(JodaModule())
     }
 
     private fun rootInit() {
@@ -73,6 +82,7 @@ object Rsvp {
         apiRouter.delete("/invitations/:code/guests/:key/force").handler(GuestsCtrl.deletePlusOne)
         apiRouter.put("/invitations/:code/guests/:key/rsvp").consumes(defaultContentType).handler(GuestsCtrl.rsvp)
         apiRouter.put("/invitations/:code/guests/:key/menu").consumes(defaultContentType).handler(GuestsCtrl.menu)
+        apiRouter.get("/invitations/:code/get").handler(InvitationCtrl.get)
         apiRouter.get("/invitations/:code").handler(InvitationCtrl.get)
         apiRouter.post("/menu/createitem").consumes(defaultContentType).handler(MenuCtrl.createItem)
         apiRouter.get("/menu/items/:key").handler(MenuCtrl.get)

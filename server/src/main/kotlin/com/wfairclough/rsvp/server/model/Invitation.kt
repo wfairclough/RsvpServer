@@ -19,4 +19,7 @@ data class Invitation(override val _id: MongoID? = null,
 }
 
 data class VisitRecord(val datetime: DateTime,
-                       val userAgent: String?)
+                       val userAgent: String?,
+                       val localAddress: String?,
+                       val remoteAddress: String?,
+                       val httpVersion: String?)

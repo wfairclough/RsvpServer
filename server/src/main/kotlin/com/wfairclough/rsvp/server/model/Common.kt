@@ -1,7 +1,6 @@
 package com.wfairclough.rsvp.server.model
 
-import com.wfairclough.rsvp.server.json.Exclude
-import io.vertx.ext.web.RoutingContext
+import com.wfairclough.rsvp.server.json.ExcludeJson
 import org.bson.types.ObjectId
 import java.util.*
 
@@ -17,7 +16,7 @@ typealias DbKey = String
 
 typealias MongoID = ObjectId
 
-data class ResourceCreated<out T>(val key: DbKey, @Exclude val _data: T)
+data class ResourceCreated<out T>(val key: DbKey, @ExcludeJson val _data: T)
 
 interface Keyable {
     val key: DbKey?

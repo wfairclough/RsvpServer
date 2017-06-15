@@ -3,9 +3,12 @@ package com.wfairclough.rsvp.server.controllers
 import com.wfairclough.rsvp.server.model.DbKeyUtils
 import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.Invitation
+import com.wfairclough.rsvp.server.model.VisitRecord
 import com.wfairclough.rsvp.server.utils.Log
 import io.vertx.core.Handler
+import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.RoutingContext
+import org.joda.time.DateTime
 
 /**
  * Created by will on 2017-05-22.
@@ -86,9 +89,10 @@ object InvitationCtrl : BaseCtrl() {
         } ?: ctx.fail("Could not find invitation with code: $inviteCode", 404)
     }
 
-    data class InvitationQuery(val query: String)
+    data class InvitationQuery(val query: String?, val code: String?, val key: String?)
 
     val get = Handler<RoutingContext> { ctx ->
+
         Log.i("get: ${ctx.normalisedPath()}")
         val code = ctx.pathParam("code") ?: ""
         if (code.isBlank()) {
@@ -97,16 +101,33 @@ object InvitationCtrl : BaseCtrl() {
         }
         val ret = invitationDao.findFirst { it.code == code}
         ret?.let {
+            if (!ctx.normalisedPath().endsWith("get")) {
+                val visitRec = VisitRecord(datetime = DateTime.now(),
+                        userAgent = ctx.request()?.getHeader(HttpHeaders.USER_AGENT),
+                        localAddress = ctx.request()?.localAddress()?.toString(),
+                        remoteAddress = ctx.request()?.remoteAddress()?.toString(),
+                        httpVersion = ctx.request()?.version()?.toString())
+                val visits = it.visits?.let { it + listOf(visitRec) } ?: listOf(visitRec)
+                invitationDao.update(it.copy(viewed = true, visits = visits))?.let {
+                    Log.d("Set invite ${it.code} to viewed")
+                }
+            }
             ctx.response().success(ret.sortedCopy())
         } ?: ctx.fail("Could not find invitation with code: $code", 404)
     }
 
     val query = Handler<RoutingContext> { ctx ->
         val queryJson = ctx.bodyAsOrFail(InvitationQuery::class.java) ?: return@Handler
-        val ret = invitationDao.findFirst { it.code == queryJson.query}
-        ret?.let {
-            ctx.response().success(ret.sortedCopy())
-        } ?: ctx.fail("Could not find invitation with code: ${queryJson.query}", 404)
+        val ret: List<Invitation?> = when {
+            queryJson.key != null -> listOf(invitationDao.findFirst { it.code == queryJson.key})
+            queryJson.code != null -> listOf(invitationDao.findFirst { it.code == queryJson.code})
+            queryJson.query != null -> invitationDao.find(queryJson.query)
+            else -> {invitationDao.findAll()}
+        }
+
+        ret.filterNotNull().let {
+            ctx.response().success( it.map { it.sortedCopy() } )
+        }
     }
 
 

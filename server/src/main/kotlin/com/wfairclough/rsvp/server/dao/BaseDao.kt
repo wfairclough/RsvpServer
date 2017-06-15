@@ -33,4 +33,8 @@ abstract class BaseDao<T : Keyable> {
                 filter = "{'key': '${keyable.key}'}",
                 replacement = keyable,
                 options = FindOneAndReplaceOptions().returnDocument(ReturnDocument.AFTER))
+
+    fun find(query: String): List<T> {
+        return collection.find(query).toList()
+    }
 }

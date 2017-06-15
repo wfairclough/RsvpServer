@@ -1,27 +1,35 @@
 package com.wfairclough.rsvp.server.json
 
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
-import com.google.gson.GsonBuilder
+import com.google.gson.*
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
 
 /**
  * Created by will on 2017-05-22.
  */
-annotation class Exclude
 
 object Serializer {
 
-    val gson by lazy {
-        GsonBuilder().addSerializationExclusionStrategy(object : ExclusionStrategy {
-            override fun shouldSkipClass(clazz: Class<*>?): Boolean {
-                return false
-            }
+    val strategy = object : ExclusionStrategy {
+        override fun shouldSkipClass(clazz: Class<*>?): Boolean {
+            val ann = clazz?.getAnnotation(ExcludeJson::class.java)
+            return ann != null
+        }
 
-            override fun shouldSkipField(f: FieldAttributes?): Boolean {
-                return f?.getAnnotation(Exclude::class.java) != null ||
-                        f?.name?.take(1) == "_"
-            }
-        }).create()
+        override fun shouldSkipField(f: FieldAttributes?): Boolean {
+            val ann = f?.getAnnotation(ExcludeJson::class.java)
+            return (f?.name?.startsWith("_") ?: false) || ann != null
+        }
+
+    }
+
+    val gson by lazy {
+        GsonBuilder()
+                .addSerializationExclusionStrategy(strategy)
+                .addDeserializationExclusionStrategy(strategy)
+                .registerTypeAdapter(DateTime::class.java, DateTimeConverter())
+                .create()
+
     }
 
 }
