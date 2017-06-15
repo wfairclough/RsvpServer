@@ -1650,6 +1650,10 @@ footer.white-wrapper .social-links li a {
     font-weight: 100;
 }
 
+.invitation-guest {
+    padding-bottom: 10px;
+}
+
 .invitation-guest .question {
     font-style: italic;
 }
@@ -1676,7 +1680,7 @@ footer.white-wrapper .social-links li a {
 }
 
 .invitation-guest hr {
-    margin: 3px 110px;
+    margin: 5px 110px;
     border: 0;
     border-top: 1px solid #c7c3c3;
 }
@@ -1735,7 +1739,27 @@ footer.white-wrapper .social-links li a {
   opacity: 0
 }
 
+.menu {
+    padding: 0 20px;
+}
 
+.menu-item {
+    cursor: pointer;
+    cursor: hand;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0);
+    border-style: solid;
+}
+
+.menu-item:hover {
+    border-color: #98b5a1;
+}
+
+.menu-item.selected {
+    border-width: 2px;
+    border-color: #98b5a1;
+    border-style: dashed;
+}
 
 
 

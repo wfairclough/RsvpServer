@@ -26,7 +26,21 @@ var rvspForm = new Vue({
     invitation: {},
     invitationJson: '',
     stage: RsvpStage.CODE,
-    isFetching: false
+    isFetching: false,
+    menu: {
+      items: []
+    }
+  },
+  created: function() {
+    var vm = this;
+    axios.get('/api/menu/items')
+      .then(function(rsp) {
+        console.log(rsp);
+        vm.menu.items = rsp.data;
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
   },
   methods: {
     submitCode: function() {
@@ -50,6 +64,13 @@ var rvspForm = new Vue({
     },
     updateInvitation: function(inv) {
       console.log('Update Invitation');
+      // Calculate if any of the guests in the new invitation were just added
+      var oldGuestKeys = this.invitation.guests.map(function(g) { return g.key });
+      var updatedGuests = inv.guests.map(function(g) {
+        g.justAdded = oldGuestKeys.indexOf(g.key) === -1;
+        return g;
+      });
+      inv.guests = updatedGuests;
       this.invitation = inv;
     }
   }
@@ -57,12 +78,37 @@ var rvspForm = new Vue({
 
 Vue.component('guest', {
   // declare the props
-  props: ['invitation', 'guest', 'index'],
+  props: ['invitation', 'guest', 'index', 'menu'],
   data: function() {
     return {
       isAddingGuest: false,
       applied: false,
-      guestOf: null
+      guestOf: null,
+      selectedMenuItem: null
+    }
+  },
+  created: function() {
+    if (this.guest.justAdded) {
+      this.toggleAppliedCover();
+    }
+  },
+  watch: {
+    selectedMenuItem: function(newMenuItem) {
+      console.log('Selected new menu Item: ' + newMenuItem);
+      var vm = this;
+      axios.put('/api/invitations/'+this.invitation.code+'/guests/'+this.guest.key+'/menu', 
+        {
+          menuItemKey: newMenuItem,
+          notes: ''
+        })
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.$emit('update-invitation', rsp.data);
+          vm.toggleAppliedCover();
+        })
+        .catch(function(err) {
+          console.error(err);
+        });
     }
   },
   methods: {
@@ -147,6 +193,10 @@ Vue.component('guest', {
       return vm.invitation.guests.filter(function(g) {
         return g.key === vm.guest.plusOneGuestKey;
       })[0];
+    },
+    isSelectedMenuItem: function(item) {
+      var selectedKey = this.guest.menuItem && this.guest.menuItem.menuItemKey;
+      return selectedKey === item.key
     }
   },
   // just like data, the prop can be used inside templates
@@ -162,7 +212,21 @@ Vue.component('guest', {
           <a class="answer" v-on:click="rsvp" v-bind:class="{ selected: guest.rsvp }">Yes</a>
           <a class="answer" v-on:click="unrsvp" v-bind:class="{ selected: !guest.rsvp }">No</a>
       </div>
-
+      
+      <hr v-if="guest.rsvp && guest.plusOneGuestKey === undefined"/>
+      <div class="question select-meal" v-if="guest.rsvp">
+          <p>Please select {{guest.firstname}}'s choice entr&eacute;e?</p>
+          <div class="menu">
+            <div class="menu-item" 
+              v-for="item in menu.items" 
+              v-bind:class="{ selected: isSelectedMenuItem(item) }"
+              @click="selectedMenuItem = item.key">
+                <a class="answer">{{ item.name }}</a>
+                <p>{{ item.description }}</p>
+            </div>
+          </div>
+      </div>
+      
       <hr v-if="guest.plusOne"/>
       <div class="question plus-one" v-if="guest.plusOne">
           <p>Will {{guest.firstname}} be bringing a guest?</p>
@@ -173,8 +237,7 @@ Vue.component('guest', {
                       v-bind:invitationCode="invitation.code" 
                       v-bind:addedByGuest="guest" />
       </div>
-      
-      <!-- <p v-if="index < invitation.guests.length - 1">AND</p> -->
+
   </div>
   `
 });

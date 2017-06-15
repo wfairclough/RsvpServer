@@ -379,7 +379,8 @@
                                 <guest  v-for="(guest, index) in invitation.guests" 
                                         v-bind:invitation="invitation" 
                                         v-bind:guest="guest" 
-                                        v-bind:index="index" 
+                                        v-bind:index="index"
+                                        v-bind:menu="menu"
                                         v-bind:key="guest.key"
                                         v-on:update-invitation="updateInvitation" />
                                 
