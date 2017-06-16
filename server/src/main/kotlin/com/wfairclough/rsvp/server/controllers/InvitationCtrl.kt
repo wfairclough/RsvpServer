@@ -26,7 +26,7 @@ object InvitationCtrl : BaseCtrl() {
 
         Log.d("Create Invite: $reqJson")
 
-        invitationDao.findFirst { it.code == reqJson.code}?.let {
+        invitationDao.findByCode(reqJson.code)?.let {
             ctx.fail("Invitation with code '${reqJson.code}' already exists", 400)
             return@Handler
         }
@@ -54,7 +54,7 @@ object InvitationCtrl : BaseCtrl() {
                     invitationKey = inviteKey)
         }
 
-        val invitation = Invitation(key = inviteKey, code = reqJson.code, guests = guests)
+        val invitation = Invitation(key = inviteKey, code = reqJson.code.toLowerCase(), guests = guests)
 
         val invite = invitationDao.create(invitation)
 
@@ -99,7 +99,7 @@ object InvitationCtrl : BaseCtrl() {
             ctx.fail("Could not find invitation with blank code", 400)
             return@Handler
         }
-        val ret = invitationDao.findFirst { it.code == code}
+        val ret = invitationDao.findByCode(code)
         ret?.let {
             if (!ctx.normalisedPath().endsWith("get")) {
                 val visitRec = VisitRecord(datetime = DateTime.now(),
@@ -119,8 +119,8 @@ object InvitationCtrl : BaseCtrl() {
     val query = Handler<RoutingContext> { ctx ->
         val queryJson = ctx.bodyAsOrFail(InvitationQuery::class.java) ?: return@Handler
         val ret: List<Invitation?> = when {
-            queryJson.key != null -> listOf(invitationDao.findFirst { it.code == queryJson.key})
-            queryJson.code != null -> listOf(invitationDao.findFirst { it.code == queryJson.code})
+            queryJson.key != null -> listOf(invitationDao.findFirst { it.key == queryJson.key})
+            queryJson.code != null -> listOf(invitationDao.findByCode(queryJson.code))
             queryJson.query != null -> invitationDao.find(queryJson.query)
             else -> {invitationDao.findAll()}
         }
