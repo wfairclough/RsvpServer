@@ -118,10 +118,11 @@ object InvitationCtrl : BaseCtrl() {
         }
         invitationDao.findByCode(code)?.let {
             if (!ctx.normalisedPath().endsWith("get")) {
+                Log.d("Headers: ${ctx.request().headers().map { it.toString() }.joinToString { it }}")
                 val visitRec = VisitRecord(datetime = DateTime.now(),
                         userAgent = ctx.request()?.getHeader(HttpHeaders.USER_AGENT),
                         localAddress = ctx.request()?.localAddress()?.toString(),
-                        remoteAddress = ctx.request()?.remoteAddress()?.toString(),
+                        remoteAddress = ctx.request()?.getHeader("X-REAL-IP") ?: ctx.request()?.getHeader("X_FORWARDED_FOR") ?: ctx.request()?.remoteAddress()?.toString(),
                         httpVersion = ctx.request()?.version()?.toString())
                 val visits = it.visits?.let { it + listOf(visitRec) } ?: listOf(visitRec)
                 invitationDao.update(it.copy(viewed = true, visits = visits))?.let {
