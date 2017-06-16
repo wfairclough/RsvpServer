@@ -658,7 +658,7 @@ fieldset[disabled] .btn-primary.active {
 #headerwrap {
     background-color: #f3f3f3;
     overflow: hidden;
-    background-image: url('../img/bg/bgheart.jpg');
+    /*background-image: url('../img/bg/bgheart.jpg');*/
 }
 
 .opaque {
@@ -1586,6 +1586,7 @@ footer.white-wrapper .social-links li a {
     margin-bottom: 44px;
     letter-spacing: 2px;
     font-weight: 700;
+    padding-left: 40px;
 }
 
 #fettiwrap {
@@ -1774,8 +1775,72 @@ footer.white-wrapper .social-links li a {
     color: red;
 }
 
+.song-choice {
 
+}
 
+.song-choice input[type="text"] {
+    background-color: white;
+    padding: 2px 10px;
+    height: 30px;
+    font-size: 10px;
+}
 
+.song-choice input[type="text"]::-moz-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
+.song-choice input[type="text"]::-ms-input-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
+.song-choice input[type="text"]::-webkit-input-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
 
+.notes textarea {
+    background-color: white;
+    padding: 10px 10px;
+}
+
+.notes textarea::-moz-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
+
+.notes textarea::-ms-input-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
+
+.notes textarea::-webkit-input-placeholder {
+    text-transform: none;
+    color: #c7cbd0;
+}
+
+.submit-invite button.btn-default {
+    margin-top: 15px;
+    color: #FFF !important;
+    font-size: 15px;
+    line-height: 52px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background-color: #50a2f6;
+    padding: 0px 30px;
+    border: 0px;
+    border-bottom: 3px solid #4395e8;
+    outline: none !important;
+    border-radius: 3px;
+    -webkit-transition: background-color .2s ease, color .2s ease, border .2s ease;
+    transition: background-color .2s ease, color .2s ease, border .2s ease;
+    width: 160px;
+}
+
+.submit-invite button.btn-default:hover {
+    background-color: #3d8fe2;
+    border-bottom-color: #3283d5;
+    color: white;
+}
 

@@ -140,7 +140,7 @@ object GuestsCtrl : BaseCtrl() {
                 false -> guest.copy(rsvp = rsvpJson.rsvp, hasAddedPlusOne = null)
             }
             val updatedGuests = listOf(updatedGuest) + parts.second
-            // We must remove the plus one if we are unrsvping
+            // We must delete the plus one if we are unrsvping
             val newInvite = when (guest.hasAddedPlusOne) {
                 true -> invite.copy(guests = updatedGuests.filterNot { it.plusOneGuestKey == guestKey })
                 else -> invite.copy(guests = updatedGuests)

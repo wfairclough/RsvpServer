@@ -1,10 +1,12 @@
 package com.wfairclough.rsvp.server.dao
 
 import com.mongodb.MongoException
+import com.mongodb.client.result.DeleteResult
 import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.Invitation
 import com.wfairclough.rsvp.server.model.ResourceCreated
 import com.wfairclough.rsvp.server.utils.Log
+import org.litote.kmongo.deleteOne
 import org.litote.kmongo.find
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection
@@ -46,5 +48,7 @@ class InvitationDao : BaseDao<Invitation>() {
     }
 
     fun findByCode(code: String): Invitation? = collection.findOne("{'code': '${code.toLowerCase()}'}")
+
+    fun removeByCode(inviteCode: String): DeleteResult = collection.deleteOne("{'code': '${inviteCode.toLowerCase()}'}")
 
 }

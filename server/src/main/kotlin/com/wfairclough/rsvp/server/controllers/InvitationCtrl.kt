@@ -62,6 +62,23 @@ object InvitationCtrl : BaseCtrl() {
 
     }
 
+    val delete = Handler<RoutingContext> { ctx ->
+        val inviteCode = ctx.pathParam("code") ?: ""
+        if (inviteCode.isBlank()) {
+            ctx.fail("Could not find invitation with blank code", 400)
+            return@Handler
+        }
+
+        val delRes = invitationDao.removeByCode(inviteCode)
+
+        if (delRes.deletedCount == 1L) {
+            ctx.response().success(delRes)
+        } else {
+            ctx.fail("Did not delete the invitation with code: $inviteCode", 400)
+        }
+
+    }
+
     val addGuest = Handler<RoutingContext> { ctx ->
         val reqJson: InvitationGuest = ctx.bodyAsOrFail(InvitationGuest::class.java) ?: return@Handler
         val inviteCode = ctx.pathParam("code") ?: ""
@@ -99,8 +116,7 @@ object InvitationCtrl : BaseCtrl() {
             ctx.fail("Could not find invitation with blank code", 400)
             return@Handler
         }
-        val ret = invitationDao.findByCode(code)
-        ret?.let {
+        invitationDao.findByCode(code)?.let {
             if (!ctx.normalisedPath().endsWith("get")) {
                 val visitRec = VisitRecord(datetime = DateTime.now(),
                         userAgent = ctx.request()?.getHeader(HttpHeaders.USER_AGENT),
@@ -112,8 +128,27 @@ object InvitationCtrl : BaseCtrl() {
                     Log.d("Set invite ${it.code} to viewed")
                 }
             }
-            ctx.response().success(ret.sortedCopy())
+            ctx.response().success(it.sortedCopy())
         } ?: ctx.fail("Could not find invitation with code: $code", 404)
+    }
+
+    data class RsvpForm(val song: String?, val notes: String?)
+
+    val submit = Handler<RoutingContext> { ctx ->
+        val code = ctx.pathParam("code") ?: ""
+        if (code.isBlank()) {
+            ctx.fail("Could not find invitation with blank code", 400)
+            return@Handler
+        }
+        val rsvpForm = ctx.bodyAsOrFail(RsvpForm::class.java) ?: return@Handler
+
+        invitationDao.findByCode(code)?.let {
+            invitationDao.update(it.copy(songRequest = rsvpForm.song, notes = rsvpForm.notes))?.let {
+                ctx.response().success(it.sortedCopy())
+                return@Handler
+            } ?: ctx.fail("Could not update the invitation with code: $code", 500)
+        } ?: ctx.fail("Could not find invitation with code: $code", 404)
+
     }
 
     val query = Handler<RoutingContext> { ctx ->

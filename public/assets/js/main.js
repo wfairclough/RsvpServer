@@ -16,19 +16,23 @@ var app5 = new Vue({
 const RsvpStage = {
   CODE: 'code',
   INVITE:  'invite',
-  MENU:  'menu'
+  FINISHED:  'finished'
 };
 
 var rvspForm = new Vue({
-  el: "#rsvpFroms",
+  el: "#rsvpContainer",
   data: {
+    message: 'RSVP',
     rsvpCode: '',
     invitation: {},
-    invitationJson: '',
     stage: RsvpStage.CODE,
     isFetching: false,
     menu: {
       items: []
+    },
+    rsvpForm: {
+      notes: '',
+      songChoice: ''
     }
   },
   created: function() {
@@ -53,14 +57,30 @@ var rvspForm = new Vue({
           vm.isFetching = false;
           vm.stage = RsvpStage.INVITE;
           vm.invitation = rsp.data;
-          vm.invitationJson = JSON.stringify(rsp.data);
         })
         .catch(function(err) {
           console.error(err);
+          vm.isFetching = false;
         });
     },
     submitRsvp: function() {
-
+      var vm = this;
+      this.isFetching = true;
+      axios.put('/api/invitations/'+this.invitation.code+'/submit', {
+        song: this.invitation.songRequest,
+        notes: this.invitation.notes
+      })
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.message = 'We look forward to seeing you!';
+          vm.isFetching = false;
+          vm.stage = RsvpStage.FINISHED;
+          vm.invitation = rsp.data;
+        })
+        .catch(function(err) {
+          console.error(err);
+          this.isFetching = false;
+        });
     },
     updateInvitation: function(inv) {
       console.log('Update Invitation');

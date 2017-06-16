@@ -122,7 +122,7 @@
             </div>
         </section>
 
-     	<section class="light-wrapper light-opaqued parallax" data-parallax="scroll" data-image-src="assets/img/bg/bg8.jpg" data-speed="0.7">
+     	<section class="light-wrapper light-opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
             <div class="section-inner">
                 <div class="wow fadeIn">
     				<div class="container text-center the-date">
@@ -242,7 +242,7 @@
             </div>
         </section>
 
-        <section class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="assets/img/bg/bg5.jpg" data-speed="0.7">
+        <section class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
             <div class="section-inner">
                 <div class="container">
                     <div class="row">
@@ -349,10 +349,10 @@
         </section>
 
         <footer id="rsvp" class="white-wrapper">
-            <div class="container">
+            <div id="rsvpContainer" class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <h4 class="footer-goodbye">We look forward to seeing you!</h4>
+                        <h4 class="footer-goodbye">{{ message }}</h4>
                     </div>
 
                     <hr class="col-sm-12 thin-hr" />
@@ -385,6 +385,29 @@
                                         v-on:update-invitation="updateInvitation">
                                 </guest>
                                 
+                                <div class="row song-choice">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <h5>Suggest a song that will get you dancing:</h5>
+                                        <input type="text" v-model="invitation.songRequest" class="form-control" name="song" placeholder="Artist - Title" id="song-choice"/>
+                                    </div>
+                                </div>
+
+                                <div class="row notes">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <h5>Notes:</h5>
+                                        <textarea v-model="invitation.notes" class="form-control" rows="3" cols="50" placeholder="Let us know whats on your mind">
+                                        </textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row submit-invite">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        
+                                        <button v-on:click="submitRsvp" class="btn btn-default">RSVP</button>
+
+                                    </div>
+                                </div>
+
                                 <div class="invalid-invite">
                                     <p>Please be sure you have answered all the questions for each guest.</p>
                                 </div>

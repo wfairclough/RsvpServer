@@ -47,4 +47,4 @@ $headers .= "Content-Transfer-Encoding: quoted-printable" . "\r\n";
 
 
 
-if(mail($address, $e_subject, $msg, $headers)) { echo "<fieldset><div id='success_page'><h4 class='remove-bottom'>Email Sent Successfully.</h4><p>Thank you <strong>$name</strong>, your message has been submitted to us.</p></div></fieldset>"; }
+if(mail($address, $e_subject, $msg, $headers)) { echo "<fieldset><div id='success_page'><h4 class='delete-bottom'>Email Sent Successfully.</h4><p>Thank you <strong>$name</strong>, your message has been submitted to us.</p></div></fieldset>"; }
