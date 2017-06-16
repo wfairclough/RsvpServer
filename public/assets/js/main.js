@@ -140,12 +140,12 @@ Vue.component('guest', {
     unrsvp: function() {
       console.log('unrsvp');
       var vm = this;
+      vm.isAddingGuest = false;
       axios.put('/api/invitations/'+this.invitation.code+'/guests/'+this.guest.key+'/rsvp', {rsvp: false})
         .then(function(rsp) {
           console.log(rsp);
           vm.$emit('update-invitation', rsp.data);
           vm.toggleAppliedCover();
-          vm.isAddingGuest = false;
         })
         .catch(function(err) {
           console.error(err);
@@ -158,6 +158,7 @@ Vue.component('guest', {
     removePlusOne: function() {
       console.log('removePlusOne');
       var vm = this;
+      vm.isAddingGuest = false;
       var invitedGuest = this.getInvitedGuest();
       if (invitedGuest !== null) {
         axios.delete('/api/invitations/'+this.invitation.code+'/guests/'+invitedGuest.key)
@@ -166,7 +167,6 @@ Vue.component('guest', {
           vm.plusOne = null;
           vm.$emit('update-invitation', rsp.data);
           vm.toggleAppliedCover();
-          vm.isAddingGuest = false;
         })
         .catch(function(err) {
           console.error(err);
@@ -255,8 +255,8 @@ Vue.component('guest', {
       <div class="question plus-one" v-if="guest.plusOne && guest.rsvp">
           <p>Will {{guest.firstname}} be bringing a guest?</p>
           <div class="answers" v-bind:class="{ invalid: (guest.hasAddedPlusOne === undefined) }">
-            <a class="answer" v-on:click="addPlusOne" v-bind:class="{ selected: (guest.hasAddedPlusOne === true || (guest.hasAddedPlusOne === undefined && isAddingGuest)) }">Yes</a>
-            <a class="answer" v-on:click="removePlusOne" v-bind:class="{ selected: guest.hasAddedPlusOne === false }">No</a>
+            <a class="answer" v-on:click="addPlusOne" v-bind:class="{ selected: (guest.hasAddedPlusOne === true || isAddingGuest) }">Yes</a>
+            <a class="answer" v-on:click="removePlusOne" v-bind:class="{ selected: (guest.hasAddedPlusOne === false && !isAddingGuest)}">No</a>
             <p v-if="plusOne !== null">({{ plusOne.firstname + ' ' + plusOne.lastname }})</p>
             <add-guest  v-if="(isAddingGuest && !guest.hasAddedPlusOne)"
                         v-on:guest-added="guestAdded"
