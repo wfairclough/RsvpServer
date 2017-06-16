@@ -62,8 +62,8 @@
                 <div class="collapse navbar-collapse" id="main-navigation">
                     <ul class="nav navbar-nav text-center">
                         <li><a href="#welcome" class="page-scroll smoothie">Welcome</a></li>
-                        <li><a href="#wedding-date" class="page-scroll smoothie">Info</a></li>
                         <li><a href="#wedding-party" class="page-scroll smoothie">Party</a></li>
+                        <li><a href="#wedding-date" class="page-scroll smoothie">Info</a></li>
                         <li><a class="navbar-brand smoothie" href="index.html">Katrina and Will</a></li>
                         <li><a href="#well-wishes" class="page-scroll smoothie">Guestbook</a></li>
                         <li><a href="#gifts" class="page-scroll smoothie">Gifts</a></li>
@@ -370,8 +370,8 @@
                     <div class="col-sm-12 col-md-10 col-md-offset-1 section-inner">
                         <div id="message"></div>
                         <div id="rsvpFroms">
-                            <h4 class="heading-font">Enter your RSVP code attached to your invitation</h4>
                             <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
+                                <h4 class="heading-font">Enter your RSVP code attached to your invitation</h4>
                                 <input type="text" v-model="rsvpCode" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
                                 <input class="btn btn-primary mt5" type="submit" name="submitRsvpCode" value="Submit" />
                             </form>
