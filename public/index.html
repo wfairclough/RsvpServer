@@ -62,8 +62,10 @@
                 <div class="collapse navbar-collapse" id="main-navigation">
                     <ul class="nav navbar-nav text-center">
                         <li><a href="#welcome" class="page-scroll smoothie">Welcome</a></li>
-                        <li><a href="#wedding-date" class="page-scroll smoothie">Date</a></li>
+                        <li><a href="#wedding-date" class="page-scroll smoothie">Info</a></li>
+                        <li><a href="#wedding-party" class="page-scroll smoothie">Party</a></li>
                         <li><a class="navbar-brand smoothie" href="index.html">Katrina and Will</a></li>
+                        <li><a href="#well-wishes" class="page-scroll smoothie">Guestbook</a></li>
                         <li><a href="#gifts" class="page-scroll smoothie">Gifts</a></li>
                         <li><a href="#rsvp" class="page-scroll smoothie">RSVP</a></li>
                     </ul>
@@ -100,29 +102,37 @@
                         <div class="col-lg-12 text-center mb100 wow fadeIn">                        
                             <h2 v-on:click="reverseMessage" class="section-heading">{{message}}</h2>
                             <hr class="thin-hr">
-                            <h3 class="section-subheading secondary-font">Join them on their special occasion.</h3>
+                            <h3 class="section-subheading secondary-font">Continuing their adventure</h3>
                         </div>
                     </div>
                 </div>
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-5 col-md-offset-1 wow fadeIn">
-                        	<img src="assets/img/him.jpg" class="img-responsive mb30">
-                            <p class="text-center">Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to. </p>
+
+    					<div class="col-sm-4 wow fadeIn">
+    						<img src="assets/img/us/heather.jpg" class="img-responsive mb30">
+    					</div>
+
+                        <div class="col-sm-4 wow fadeIn">
+                            <img src="assets/img/us/luskville.jpeg" class="img-responsive mb30">
                         </div>
 
-    					<div class="col-md-5 wow fadeIn">
-    						<img src="assets/img/her.jpg" class="img-responsive mb30">
-    					    <p class="text-center">Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to. </p>
-    					</div>
+                        <div class="col-sm-4 wow fadeIn">
+                            <img src="assets/img/us/novan.jpg" class="img-responsive mb30">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 wow fadeIn">
+                            <p>After dating for a year while they were both finishing at Carleton, Katrina and Will were ready for a big move. They drove across the country starting their 3 year adventure in BC. They spent their free time hiking and exploring the west coast. On one of their weekend trips, Will proposed while they were in Tofino and captured the moment on camera. In November 2016, Katrina accepted a job she couldn't pass up back in Ottawa, so they moved back to the town where they fell in love. They are excited to continue their adventures as husband and wife.</p>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </section>
 
-     	<section class="light-wrapper light-opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
+     	<section id="wedding-party" class="light-wrapper light-opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
             <div class="section-inner">
                 <div class="wow fadeIn">
     				<div class="container text-center the-date">
@@ -242,7 +252,7 @@
             </div>
         </section>
 
-        <section class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
+        <section id="well-wishes" class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
             <div class="section-inner">
                 <div class="container">
                     <div class="row">
@@ -348,18 +358,19 @@
         	</div>
         </section>
 
-        <footer id="rsvp" class="white-wrapper">
+        <footer id="rsvp" class="light-wrapper light-opaqued parallax">
             <div id="rsvpContainer" class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h4 class="footer-goodbye">{{ message }}</h4>
                     </div>
 
-                    <hr class="col-sm-12 thin-hr" />
+                    <!-- <hr class="col-sm-12 thin-hr" /> -->
 
-                    <div class="col-sm-10 col-sm-offset-1 section-inner">
+                    <div class="col-sm-12 col-md-10 col-md-offset-1 section-inner">
                         <div id="message"></div>
                         <div id="rsvpFroms">
+                            <h4 class="heading-font">Enter your RSVP code attached to your invitation</h4>
                             <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
                                 <input type="text" v-model="rsvpCode" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
                                 <input class="btn btn-primary mt5" type="submit" name="submitRsvpCode" value="Submit" />

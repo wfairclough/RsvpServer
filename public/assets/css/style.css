@@ -1587,6 +1587,7 @@ footer.white-wrapper .social-links li a {
     letter-spacing: 2px;
     font-weight: 700;
     padding-left: 40px;
+    color: white;
 }
 
 #fettiwrap {
@@ -1623,8 +1624,8 @@ footer.white-wrapper .social-links li a {
 
 #invitation {
     background-image: url("https://www.transparenttextures.com/patterns/white-linen.png"); 
-    background-color: '#ede5d0';
-    border-radius: 6px;
+    background-color: white;
+    border-radius: 10px;
     padding: 20px;
     border-width: 2px;
     border-color: #e6e6e6;
