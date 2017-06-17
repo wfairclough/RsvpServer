@@ -380,6 +380,11 @@
                                 <button v-on:click="addNewGuest" class="new-guest btn btn-info">Add Guest</button>  
                                 <button v-on:click="submitNewInvite" v-bind:disabled="isInviteInvalid()" class="new-guest btn btn-success">Submit Invitation</button>  
                             </div>
+                            <div class="row">
+                                <div class="col-xs-12 error">
+                                    <p v-if="error.data.message.length > 0">{{error.data.message}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

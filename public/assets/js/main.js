@@ -37,7 +37,11 @@ var addInviteSec = new Vue({
       code: '',
       guests: []
     },
-    error: {}
+    error: {
+      data: {
+        message: ''
+      }
+    }
   },
   mounted: function() {
     this.addNewGuest();
@@ -80,6 +84,11 @@ var addInviteSec = new Vue({
         code: '',
         guests: []
       };
+      this.error = {
+        data: {
+          message: ''
+        }
+      }
       this.addNewGuest();
     },
     isInviteInvalid: function() {
@@ -391,7 +400,7 @@ Vue.component('guest', {
                         v-bind:addedByGuest="guest" />
           </div>
       </div>
-      
+
       <hr v-if="guest.rsvp && guest.plusOneGuestKey === undefined"/>
       <div class="question select-meal" v-if="guest.rsvp">
           <p>Please select {{guest.firstname}}'s choice entr&eacute;e?</p>

@@ -1878,3 +1878,12 @@ button.new-guest {
     width: 100%;
     padding: 12px;
 }
+
+.dark-wrapper .error {
+    margin: 12px auto;
+    display: block;
+}
+
+.dark-wrapper .error p {
+    color: #ff7474;
+}
