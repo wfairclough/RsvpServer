@@ -1766,10 +1766,17 @@ footer.white-wrapper .social-links li a {
 }
 
 .menu-item.selected {
-    border-width: 1px;
+    /*border-width: 1px;
     border-color: #98b5a1;
-    border-style: dotted;
+    border-style: dotted;*/
+    border-radius: 4px;
+    background-color: rgba(165, 196, 243, 0.38);
+
     /*font-weight: bold;*/
+}
+
+.menu-item.selected a {
+    font-weight: bold;
 }
 
 .invalid-invite {
@@ -1845,3 +1852,29 @@ footer.white-wrapper .social-links li a {
     color: white;
 }
 
+.section-add-invite-wrapper .form-control {
+    color: white;
+}
+
+.add-guest form {
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    margin-top: 20px;
+}
+
+button.new-guest {
+    margin: 12px auto;
+    display: block;
+
+}
+
+.checkbox label {
+    line-height: 3.4em;
+}
+
+.remove-guest {
+    display: block;
+    width: 100%;
+    padding: 12px;
+}

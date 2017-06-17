@@ -478,8 +478,8 @@ $('#name').focus(function() {
     this.width = element.offsetWidth;
     this.height = element.offsetHeight;
     this.setDimensions = function () {
-      this.width = this.element.offsetWidth;
-      this.height = this.element.offsetHeight;
+      this.width = this.element.offsetWidth || 0;
+      this.height = this.element.offsetHeight || 0;
       this.canvas.width = this.width;
       this.canvas.height = this.height;
     };

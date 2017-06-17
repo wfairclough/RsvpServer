@@ -30,9 +30,10 @@
     <link href="assets/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="assets/css/pe-icons.css" rel="stylesheet">
 
-    <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
-    <script src="https://unpkg.com/vue"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vue"></script>
+    <script type="text/javascript" src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
 </head>
 
 <body id="page-top" class="index">
@@ -349,13 +350,42 @@
             </div>
         </section>
 
-        <section class="instafeed-wrapper dark-wrapper">
-        	<div id="instafeed"></div>
-        	<div class="instafeed-overlay">
-	        	<div class="vertical-center">
-	        		<p class="lead secondary-font">Share the memories</p>
-	        	</div>
-        	</div>
+        <section v-if="isAdmin" id="section-add-invite" class="section-add-invite-wrapper dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
+            <div class="section-inner">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 text-center mb100 wow fadeIn">
+                            <h2 class="section-heading">Add Invitation</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-10 col-md-offset-1">
+                            <div class="row" style="margin-bottom: 5px;">
+                                <form class="col-xs-12 col-md-6 col-md-offset-3">
+                                    <label for="invitecode">Invitation Code</label>
+                                    <input type="text" v-model="invitation.code" class="form-control" name="invitecode" placeholder="Invitation Code" id="invitecode" required data-validation-required-message="Please enter the invitation code" />
+                                </form>
+                            </div>
+
+                            <transition-group name="fade">
+                                <new-guest 
+                                        v-for="(guest, index) in invitation.guests"
+                                        v-bind:key="guest.id"
+                                        v-bind:guest="guest"
+                                        v-bind:index="index"
+                                        v-on:remove-guest="removeGuest"></new-guest>
+                            </transition-group>
+
+                            <div v-if="invitation.guests.length > 0" class="row">
+                                <button v-on:click="addNewGuest" class="new-guest btn btn-info">Add Guest</button>  
+                                <button v-on:click="submitNewInvite" v-bind:disabled="isInviteInvalid()" class="new-guest btn btn-success">Submit Invitation</button>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </section>
 
         <footer id="rsvp" class="light-wrapper light-opaqued parallax">

@@ -8,8 +8,129 @@ var app5 = new Vue({
       this.message = this.message.split('').reverse().join('')
     }
   }
+});
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+var GlobalID = 0;
+
+function nextId() {
+  return GlobalID++;
+}
+
+/*** Admin add Invitation ***/
+
+var addInviteSec = new Vue({
+  el: "#section-add-invite",
+  data: {
+    isAdmin: getParameterByName('admin') === 'true',
+    isFetching: false,
+    invitation: {
+      code: '',
+      guests: []
+    },
+    error: {}
+  },
+  mounted: function() {
+    this.addNewGuest();
+  },
+  methods: {
+    addNewGuest: function() {
+      this.invitation.guests.push(this.generateGuest());
+    },
+    generateGuest: function() {
+      return {
+        id: nextId(),
+        firstname: '',
+        lastname: '',
+        email: null,
+        plusOne: false
+      };
+    },
+    removeGuest: function(guest) {
+      this.invitation.guests = this.invitation.guests.filter(function(g) {
+        return g.id != guest.id;
+      });
+    },
+    submitNewInvite: function() {
+      var vm = this;
+      vm.isFetching = true;
+      axios.post('/api/invitations/create', this.invitation)
+        .then(function(rsp) {
+          console.log(rsp);
+          vm.isFetching = false;
+          vm.resetInvitation();
+        })
+        .catch(function(err) {
+          console.error(err);
+          vm.isFetching = false;
+          vm.error = err;
+        });
+    },
+    resetInvitation: function() {
+      this.invitation = {
+        code: '',
+        guests: []
+      };
+      this.addNewGuest();
+    },
+    isInviteInvalid: function() {
+      return !(this.invitation.guests.reduce(function(acc, g) {
+        return acc && (g.firstname.length > 0 && g.lastname.length > 0);
+      }, true) && this.invitation.code.length > 0);
+    }
+  }
+});
+
+var newGuestVm = Vue.component('new-guest', {
+  props: ['guest', 'index'],
+  data: function() {
+    return {
+      
+    }
+  },
+  methods: {
+    removeGuest: function() {
+      this.$emit('remove-guest', this.guest);
+    }
+  },
+  template: `
+    <div class="row add-guest">
+        
+        <form class="col-xs-12 col-md-6 col-md-offset-3">
+            <div class="remove-guest">
+              <button v-on:click="removeGuest" class="btn btn-danger" style="float:right;">Remove</button>
+            </div>
+
+            <label for="guestFirstName">First Name</label>
+            <input type="text" v-model="guest.firstname" class="form-control" name="guestFirstName" placeholder="required" id="guestFirstName" required data-validation-required-message="Please enter the first name for guest" />
+
+            <label for="guestLastName">Last Name</label>
+            <input type="text" v-model="guest.lastname" class="form-control" name="guestLastName" placeholder="required" id="guestLastName" required data-validation-required-message="Please enter the last name for guest" />
+
+            <label for="guestEmail">Email</label>
+            <input type="text" v-model="guest.email" class="form-control" name="guestEmail" placeholder="optional" id="guestEmail" data-validation-required-message="Please enter the guests email" />
+            
+            <div class="checkbox">
+            <label>
+              <input type="checkbox" v-model="guest.plusOne" class="form-control" name="guestPlusOne" id="guestPlusOne" required /> Does this guest have a plus one?
+            </label>
+            </div>
+        </form>
+        
+    </div>
+  `
 })
 
+/*** End Admin Add Invite ***/
 
 /*** RSVP Form ***/
 
@@ -79,7 +200,7 @@ var rvspForm = new Vue({
         })
         .catch(function(err) {
           console.error(err);
-          this.isFetching = false;
+          vm.isFetching = false;
         });
     },
     updateInvitation: function(inv) {
@@ -257,20 +378,6 @@ Vue.component('guest', {
           </div>
       </div>
       
-      <hr v-if="guest.rsvp && guest.plusOneGuestKey === undefined"/>
-      <div class="question select-meal" v-if="guest.rsvp">
-          <p>Please select {{guest.firstname}}'s choice entr&eacute;e?</p>
-          <div class="menu" v-bind:class="{ invalid: (guest.menuItem === undefined) }">
-            <div class="menu-item" 
-              v-for="item in menu.items" 
-              v-bind:class="{ selected: isSelectedMenuItem(item) }"
-              @click="selectedMenuItem = item.key">
-                <a class="answer">{{ item.name }}</a>
-                <p>{{ item.description }}</p>
-            </div>
-          </div>
-      </div>
-      
       <hr v-if="guest.plusOne && guest.rsvp"/>
       <div class="question plus-one" v-if="guest.plusOne && guest.rsvp">
           <p>Will {{guest.firstname}} be bringing a guest?</p>
@@ -282,6 +389,20 @@ Vue.component('guest', {
                         v-on:guest-added="guestAdded"
                         v-bind:invitationCode="invitation.code" 
                         v-bind:addedByGuest="guest" />
+          </div>
+      </div>
+      
+      <hr v-if="guest.rsvp && guest.plusOneGuestKey === undefined"/>
+      <div class="question select-meal" v-if="guest.rsvp">
+          <p>Please select {{guest.firstname}}'s choice entr&eacute;e?</p>
+          <div class="menu" v-bind:class="{ invalid: (guest.menuItem === undefined) }">
+            <div class="menu-item" 
+              v-for="item in menu.items" 
+              v-bind:class="{ selected: isSelectedMenuItem(item) }"
+              @click="selectedMenuItem = item.key">
+                <a class="answer">{{ item.name }}</a>
+                <p>{{ item.description }}</p>
+            </div>
           </div>
       </div>
 
