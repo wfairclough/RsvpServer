@@ -49,6 +49,6 @@ class InvitationDao : BaseDao<Invitation>() {
 
     fun findByCode(code: String): Invitation? = collection.findOne("{'code': '${code.toLowerCase()}'}")
 
-    fun removeByCode(inviteCode: String): DeleteResult = collection.deleteOne("{'code': '${inviteCode.toLowerCase()}'}")
+    fun removeByCode(inviteCode: String): DeleteResult = collection.deleteOne("{'code': '${inviteCode.replace(" ", "").toLowerCase()}'}")
 
 }

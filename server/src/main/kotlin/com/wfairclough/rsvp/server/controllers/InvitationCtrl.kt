@@ -26,7 +26,9 @@ object InvitationCtrl : BaseCtrl() {
 
         Log.d("Create Invite: $reqJson")
 
-        invitationDao.findByCode(reqJson.code)?.let {
+        val inviteCode = reqJson.code.replace(" ", "").toLowerCase()
+
+        invitationDao.findByCode(inviteCode)?.let {
             ctx.fail("Invitation with code '${reqJson.code}' already exists", 400)
             return@Handler
         }
@@ -54,7 +56,7 @@ object InvitationCtrl : BaseCtrl() {
                     invitationKey = inviteKey)
         }
 
-        val invitation = Invitation(key = inviteKey, code = reqJson.code.toLowerCase(), guests = guests)
+        val invitation = Invitation(key = inviteKey, code = inviteCode, guests = guests)
 
         val invite = invitationDao.create(invitation)
 

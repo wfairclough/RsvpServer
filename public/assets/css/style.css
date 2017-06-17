@@ -1446,6 +1446,22 @@ footer.white-wrapper .social-links li a {
     letter-spacing: 2px;
 }
 
+.time {
+    font-size: 60px;
+}
+
+.time.ceremony {
+
+}
+
+.time.cocktail {
+    
+}
+
+.time.reception {
+    
+}
+
 /*-----------------------------------------------------------------------------------*/
 /*  19 - MEDIA QUERIES
 /*-----------------------------------------------------------------------------------*/
@@ -1530,13 +1546,7 @@ footer.white-wrapper .social-links li a {
         border-right: none;
     }
     .form-control.col-md-4, .dark-wrapper.form-control.col-md-4 {
-        width: 100% !important;
-     }
-     #when .lead{
-        font-size: 40px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
+       width: 100% !important;
     }
 }
 
@@ -1546,6 +1556,135 @@ footer.white-wrapper .social-links li a {
         min-height: 400px
     }
 }
+
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px) {
+    #when .lead {
+        font-size: 20px;
+    }
+    .section-inner {
+        padding: 40px 0;
+    }
+    .date-section {
+        margin-top: 0;
+    }
+    .tab-pane .tab-inner.date {
+        padding: 1px;
+    }
+    .tab-pane .tab-inner.time {
+        padding: 0;
+    }
+    .time p {
+        font-size: 12px;
+    }
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+    #when .lead {
+        font-size: 30px;
+    }
+    .date-section {
+        margin-top: 0;
+    }
+    .tab-pane .tab-inner.date {
+        padding: 5px 0 3px;
+    }
+    .tab-pane .tab-inner.time {
+        padding: 5px 0 3px;
+    }
+    .time p {
+        font-size: 15px;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    #when .lead {
+        font-size: 60px;
+    }
+    .section-inner {
+        padding: 120px 0;
+    }
+    .date-section {
+        margin-top: 60px;
+    }
+    .tab-pane .tab-inner.date {
+        padding: 15px 0 10px;
+    }
+    .tab-pane .tab-inner.time {
+        padding: 15px 0 10px;
+    }
+    .time p {
+        font-size: 30px;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+    #when .lead {
+        font-size: 80px;
+    }
+    .tab-pane .tab-inner.date {
+        padding: 25px 0 15px;
+    }
+    .tab-pane .tab-inner.time {
+        padding: 25px 0 15px;
+    }
+    .time p {
+        font-size: 40px;
+    }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+    #when .lead {
+        font-size: 110px;
+    }
+    .tab-pane .tab-inner.date {
+        padding: 30px 0 20px;
+    }
+    .tab-pane .tab-inner.time {
+        padding: 30px 0 20px;
+    }
+    .time p {
+        font-size: 60px;
+    }
+}
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+    /*#when .lead{
+        font-size: 30px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }*/
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+
+}
+
+/** End Media Queries **/
 
 .testimonial-owl .hover-item {
     margin-left: 0;
@@ -1579,6 +1718,12 @@ footer.white-wrapper .social-links li a {
     padding-bottom: 0 !important;
 }
 
+img.map {
+    width: 400px;
+    height: 300px;
+    border: 0;
+}
+
 .footer-goodbye {
     font-family: 'Dancing Script';
     text-transform: none !important;
@@ -1588,6 +1733,7 @@ footer.white-wrapper .social-links li a {
     font-weight: 700;
     padding-left: 40px;
     color: white;
+    margin-top: 60px;
 }
 
 #fettiwrap {
@@ -1918,3 +2064,5 @@ input.submit-rsvp-code {
 #rsvp input[type="submit"]:hover {
     background-color: #c1cdd6;
 }
+
+
