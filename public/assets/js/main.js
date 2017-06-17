@@ -114,7 +114,7 @@ var newGuestVm = Vue.component('new-guest', {
   template: `
     <div class="row add-guest">
         
-        <form class="col-xs-12 col-md-6 col-md-offset-3">
+        <form class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
             <div class="remove-guest">
               <button v-on:click="removeGuest" class="btn btn-danger" style="float:right;">Remove</button>
             </div>
@@ -374,7 +374,8 @@ Vue.component('guest', {
   // just like data, the prop can be used inside templates
   // and is also made available in the vm as this.message
   template: `
-  <div class="invitation-guest">
+  <div class="row">
+    <div class="invitation-guest col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
       <transition name="fade">
         <div class="updated-cover" v-if="applied"><i class="title fa fa-check-circle"></i></div>
       </transition>
@@ -414,7 +415,7 @@ Vue.component('guest', {
             </div>
           </div>
       </div>
-
+    </div>
   </div>
   `
 });

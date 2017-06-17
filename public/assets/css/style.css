@@ -1638,12 +1638,17 @@ footer.white-wrapper .social-links li a {
 .invitation-guest {
     position: relative;
     display: block;
-    max-width: 60%;
+    /*max-width: 60%;*/
     border-radius: 4px;
     border-width: 2px;
     border-color: #e6e6e6;
     border-style: solid;
-    margin: 5px auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#rsvpFroms {
+    margin-bottom: 200px;
 }
 
 .guest-name span {
@@ -1654,6 +1659,7 @@ footer.white-wrapper .social-links li a {
 
 .invitation-guest {
     padding-bottom: 10px;
+    padding-left: 0px;
 }
 
 .invitation-guest .question {
@@ -1682,9 +1688,9 @@ footer.white-wrapper .social-links li a {
 }
 
 .invitation-guest hr {
-    margin: 5px 110px;
+    margin: 25px 110px;
     border: 0;
-    border-top: 1px solid #c7c3c3;
+    border-top: 1px solid #313e48;
 }
 
 .add-guest {
@@ -1747,18 +1753,23 @@ footer.white-wrapper .social-links li a {
 
 .invalid {
     border-width: 1px;
-    border-color: red;
+    border-color: #f9a1a1;
     border-style: dashed;
     margin: 0 30px;
 }
 
 .menu-item {
+    font-size: 10px;
     cursor: pointer;
     cursor: hand;
     border-width: 1px;
     border-color: rgba(255, 255, 255, 0);
     border-style: solid;
     margin: 3px 0;
+}
+
+.menu-item p {
+    font-size: 10px;
 }
 
 .menu-item:hover {
@@ -1886,4 +1897,24 @@ button.new-guest {
 
 .dark-wrapper .error p {
     color: #ff7474;
+}
+
+input.submit-rsvp-code {
+    line-height: 0;
+    height: 40px;
+    padding: 0;
+    max-width: 145px;
+    margin: 5px auto;
+}
+
+#rsvp input[type="text"] {
+    background-color: white;
+}
+
+#rsvp input[type="submit"] {
+    background-color: #a3b4c1;
+}
+
+#rsvp input[type="submit"]:hover {
+    background-color: #c1cdd6;
 }

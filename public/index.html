@@ -405,10 +405,10 @@
                     <div class="col-sm-12 col-md-10 col-md-offset-1 section-inner">
                         <div id="message"></div>
                         <div id="rsvpFroms">
-                            <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
-                                <h4 class="heading-font">Enter your RSVP code attached to your invitation</h4>
-                                <input type="text" v-model="rsvpCode" class="form-control col-md-6" name="code" placeholder="RSVP Code:" id="code" required data-validation-required-message="Please enter your RSVP Code" />
-                                <input class="btn btn-primary mt5" type="submit" name="submitRsvpCode" value="Submit" />
+                            <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="col-md-6 col-md-offset-3 col-xs-12 main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
+                                <label for="submitRsvpCode">Enter your RSVP code attached to your invitation</label>
+                                <input type="text" v-model="rsvpCode" class="form-control" name="code" placeholder="RSVP Code" id="code" required data-validation-required-message="Please enter your RSVP Code" />
+                                <input class="submit-rsvp-code btn btn-primary mt5 form-control" type="submit" name="submitRsvpCode" value="Submit" />
                             </form>
                             <div id="invitation" class="" v-else-if="(!isFetching && stage === 'invite')">
                                 <p v-show="false">Code: {{invitation.code}}</p>
@@ -419,7 +419,7 @@
                                 <h5>and</h5>
                                 <h4>William Fairclough</h4>
                                 <br/>
-                                <h4>Would like to invite:</h4>
+                                <h4>Would like to invite you to their wedding</h4>
                                 <br/>
 
                                 <guest  v-for="(guest, index) in invitation.guests" 
