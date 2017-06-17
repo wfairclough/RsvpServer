@@ -1,3 +1,12 @@
+var nav = new Vue({
+  el: '#main-navigation',
+  methods: {
+    onNav: function() {
+      $('.navbar-toggle').click()
+    }
+  }
+})
+
 var app5 = new Vue({
   el: '#welcome',
   data: {
@@ -7,6 +16,26 @@ var app5 = new Vue({
     reverseMessage: function () {
       this.message = this.message.split('').reverse().join('')
     }
+  }
+});
+
+var wellWishesVm = new Vue({
+  el: '#well-wishes',
+  data: {
+    
+  },
+  methods: {
+    
+  }
+});
+
+var giftsVm = new Vue({
+  el: '#gifts',
+  data: {
+    
+  },
+  methods: {
+    
   }
 });
 

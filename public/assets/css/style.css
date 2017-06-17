@@ -365,6 +365,18 @@ body {
     z-index: 5;
 }
 
+.light-opaqued .thin-hr {
+    margin: 30px 0 60px;
+}
+
+.light-opaqued .thin-hr:before {
+    color: #776a94;
+}
+
+.light-opaqued .thin-hr:after {
+    background-color: white;
+}
+
 .rotate-45 {
     -moz-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
@@ -738,6 +750,7 @@ section {
 
 .light-opaqued {
     background-color: rgb(152,181,161);
+    color: white;
 }
 
 
@@ -1559,6 +1572,10 @@ footer.white-wrapper .social-links li a {
 
 /* Custom, iPhone Retina */ 
 @media only screen and (min-width : 320px) {
+    #brand.navbar-brand {
+        display: none;
+        font-size: 20px;
+    }
     #when .lead {
         font-size: 20px;
     }
@@ -1600,6 +1617,10 @@ footer.white-wrapper .social-links li a {
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
+    #brand.navbar-brand {
+        display: block;
+        font-size: 40px;
+    }
     #when .lead {
         font-size: 60px;
     }
@@ -1795,6 +1816,7 @@ img.map {
 
 #rsvpFroms {
     margin-bottom: 200px;
+    color: #25212d;
 }
 
 .guest-name span {
@@ -2064,5 +2086,10 @@ input.submit-rsvp-code {
 #rsvp input[type="submit"]:hover {
     background-color: #c1cdd6;
 }
+
+#gifts.dark-wrapper {
+    background-color: #776a94;
+}
+
 
 

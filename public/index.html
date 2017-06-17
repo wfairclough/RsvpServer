@@ -61,12 +61,12 @@
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="main-navigation">
-                    <ul class="nav navbar-nav text-center">
+                    <ul v-on:click="onNav" class="nav navbar-nav text-center">
                         <li><a href="#welcome" class="page-scroll smoothie">Welcome</a></li>
                         <li><a href="#wedding-party" class="page-scroll smoothie">Party</a></li>
                         <li><a href="#wedding-date" class="page-scroll smoothie">Info</a></li>
-                        <li><a class="navbar-brand smoothie" href="index.html">Katrina and Will</a></li>
-                        <li><a href="#well-wishes" class="page-scroll smoothie">Guestbook</a></li>
+                        <li><a id="brand" class="navbar-brand smoothie" href="/">Katrina and Will</a></li>
+                        <!-- <li><a href="#well-wishes" class="page-scroll smoothie">Guestbook</a></li> -->
                         <li><a href="#gifts" class="page-scroll smoothie">Gifts</a></li>
                         <li><a href="#rsvp" class="page-scroll smoothie">RSVP</a></li>
                     </ul>
@@ -264,7 +264,7 @@
             </div>
         </section>
 
-        <section id="well-wishes" class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
+        <section v-if="1 == 0" id="well-wishes" class="dark-wrapper opaqued parallax" data-parallax="scroll" data-image-src="" data-speed="0.7">
             <div class="section-inner">
                 <div class="container">
                     <div class="row">
@@ -318,7 +318,7 @@
             </div>
         </section>
 
-        <section id="gifts">
+        <section id="gifts" v-if="1 == 1" class="dark-wrapper opaqued parallax">
             <div class="section-inner">
 
                 <div class="container">
@@ -331,7 +331,7 @@
                     </div>
                 </div>
 
-                <div class="container">
+                <div v-if="1 == 0" class="container">
                     <div class="row">
                         <div class="col-xs-12">
                             <ul class="owl-carousel-paged testimonial-owl wow fadeIn list-unstyled" data-items="3" data-items-desktop="[1200,3]" data-items-desktop-small="[980,3]" data-items-tablet="[768,3]" data-items-mobile="[479,2]">
@@ -409,6 +409,8 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <h4 class="footer-goodbye">{{ message }}</h4>
+                        <hr class="thin-hr">
+                        <h3 class="section-subheading secondary-font">We hope you can make it</h3>
                     </div>
 
                     <!-- <hr class="col-sm-12 thin-hr" /> -->
@@ -417,7 +419,7 @@
                         <div id="message"></div>
                         <div id="rsvpFroms">
                             <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="col-md-6 col-md-offset-3 col-xs-12 main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
-                                <label for="submitRsvpCode">Enter your RSVP code attached to your invitation</label>
+                                <label style="color: white;" for="submitRsvpCode">Enter your RSVP code attached to your invitation</label>
                                 <input type="text" v-model="rsvpCode" class="form-control" name="code" placeholder="RSVP Code" id="code" required data-validation-required-message="Please enter your RSVP Code" />
                                 <input class="submit-rsvp-code btn btn-primary mt5 form-control" type="submit" name="submitRsvpCode" value="Submit" />
                             </form>
