@@ -249,8 +249,7 @@ var rvspForm = new Vue({
         g.justAdded = oldGuestKeys.indexOf(g.key) === -1;
         return g;
       });
-      inv.guests = updatedGuests;
-      this.invitation = inv;
+      this.invitation.guests = updatedGuests;
     }
   }
 });

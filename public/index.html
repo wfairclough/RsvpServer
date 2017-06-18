@@ -330,7 +330,13 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="container">
+                    <div class="row">
+                        <div style="text-align: center;">
+                            <h3 style="font-size: 90px;" class="section-subheading secondary-font">Coming Soon</h3>
+                        </div>
+                    </div>
+                </div>
                 <div v-if="1 == 0" class="container">
                     <div class="row">
                         <div class="col-xs-12">
@@ -421,7 +427,10 @@
                             <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="col-md-6 col-md-offset-3 col-xs-12 main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
                                 <label style="color: white;" for="submitRsvpCode">Enter your RSVP code attached to your invitation</label>
                                 <input type="text" v-model="rsvpCode" class="form-control" name="code" placeholder="RSVP Code" id="code" required data-validation-required-message="Please enter your RSVP Code" />
+                                <label class="need-help" for="">Code not working? Send us an email to <a href="mailto:kat.a.butler@gmail.com">kat.a.butler@gmail.com</a></label>
                                 <input class="submit-rsvp-code btn btn-primary mt5 form-control" type="submit" name="submitRsvpCode" value="Submit" />
+
+
                             </form>
                             <div id="invitation" class="" v-else-if="(!isFetching && stage === 'invite')">
                                 <p v-show="false">Code: {{invitation.code}}</p>

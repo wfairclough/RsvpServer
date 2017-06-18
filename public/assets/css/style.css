@@ -2091,5 +2091,21 @@ input.submit-rsvp-code {
     background-color: #776a94;
 }
 
+.need-help {
+    color: white; 
+    font-size: 10px;
+}
+
+.need-help a {
+    color: #d1d2e0;
+}
+
+.need-help a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+
+
 
 
