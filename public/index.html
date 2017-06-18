@@ -333,37 +333,13 @@
                 <div class="container">
                     <div class="row">
                         <div style="text-align: center;">
-                            <h3 style="font-size: 90px;" class="section-subheading secondary-font">Coming Soon</h3>
+                            <a class="giftregistry" target="_blank" href="https://www.bedbathandbeyond.ca:443/store/giftregistry/view_registry_guest.jsp?registryId=544730165&eventType=Wedding&pwsurl=">
+                                <img src="assets/img/bedbathbeyond.png" class="img-responsive" alt="">
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div v-if="1 == 0" class="container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <ul class="owl-carousel-paged testimonial-owl wow fadeIn list-unstyled" data-items="3" data-items-desktop="[1200,3]" data-items-desktop-small="[980,3]" data-items-tablet="[768,3]" data-items-mobile="[479,2]">
-                                <li>
-                                    <img src="assets/img/logo/logo1.png" class="img-responsive" alt="">
-                                </li>
-                                <li>
-                                    <img src="assets/img/logo/logo2.png" class="img-responsive" alt="">
-                                </li>
-                                <li>
-                                    <img src="assets/img/logo/logo3.png" class="img-responsive" alt="">
-                                </li>
-                                <li>
-                                    <img src="assets/img/logo/logo4.png" class="img-responsive" alt="">
-                                </li>
-                                <li>
-                                    <img src="assets/img/logo/logo5.png" class="img-responsive" alt="">
-                                </li>
-                                <li>
-                                    <img src="assets/img/logo/logo6.png" class="img-responsive" alt="">
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
+                
             </div>
         </section>
 
@@ -426,7 +402,7 @@
                         <div id="rsvpFroms">
                             <form id="rsvpCodeFrom" v-if="(!isFetching && stage === 'code')" v-on:submit.prevent="submitCode" class="col-md-6 col-md-offset-3 col-xs-12 main-rsvp-code-form wow fadeIn" data-wow-delay="0.2s">
                                 <label style="color: white;" for="submitRsvpCode">Enter your RSVP code attached to your invitation</label>
-                                <input type="text" v-model="rsvpCode" class="form-control" name="code" placeholder="RSVP Code" id="code" required data-validation-required-message="Please enter your RSVP Code" />
+                                <input type="text" v-model="rsvpCode" class="form-control rsvp-code" name="code" placeholder="RSVP Code" id="code" required data-validation-required-message="Please enter your RSVP Code" />
                                 <label class="need-help" for="">Code not working? Send us an email to <a href="mailto:kat.a.butler@gmail.com">kat.a.butler@gmail.com</a></label>
                                 <input class="submit-rsvp-code btn btn-primary mt5 form-control" type="submit" name="submitRsvpCode" value="Submit" />
 

@@ -2105,7 +2105,12 @@ input.submit-rsvp-code {
     text-decoration: underline;
 }
 
+.giftregistry img {
+    margin: 0 auto;
+    max-width: 200px;
+}
 
-
-
+input.form-control {
+    padding: 10px 30px;
+}
 
