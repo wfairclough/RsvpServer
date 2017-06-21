@@ -247,7 +247,7 @@
                                                         <div class="col-sm-5">
                                                             <div id="mapwrapper">
                                                                 <a target="_blank" href="https://goo.gl/maps/A46RocB1ZD52">
-                                                                    <img class="map" src="/assets/img/guildwood_map.png" />
+                                                                    <img class="map img-responsive" src="/assets/img/guildwood_map.png" />
                                                                 </a>
                                                             </div>    
                                                         </div>   
@@ -332,10 +332,19 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <div style="text-align: center;">
-                            <a class="giftregistry" target="_blank" href="https://www.bedbathandbeyond.ca:443/store/giftregistry/view_registry_guest.jsp?registryId=544730165&eventType=Wedding&pwsurl=">
-                                <img src="assets/img/bedbathbeyond.png" class="img-responsive" alt="">
-                            </a>
+                        <div class="col-xs-12">
+                            <ul class="owl-carousel-paged testimonial-owl wow fadeIn list-unstyled" data-items="2" data-items-desktop="[1200,3]" data-items-desktop-small="[980,3]" data-items-tablet="[768,3]" data-items-mobile="[479,2]">
+                                <li>
+                                    <a class="giftregistry" target="_blank" href="https://www.myregistry.com/wedding-registry/Will-Fairclough-Katrina-Butler-Ottawa-Ontario/1386036">
+                                        <img src="assets/img/mec.jpg" class="img-responsive" alt="">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="giftregistry" target="_blank" href="https://www.bedbathandbeyond.ca:443/store/giftregistry/view_registry_guest.jsp?registryId=544730165&eventType=Wedding&pwsurl=">
+                                        <img src="assets/img/bedbathbeyond.png" class="img-responsive" alt="">
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -439,7 +448,7 @@
                                 <div class="row notes">
                                     <div class="col-md-6 col-md-offset-3">
                                         <h5>Notes:</h5>
-                                        <textarea v-model="invitation.notes" class="form-control" rows="3" cols="50" placeholder="Let us know whats on your mind">
+                                        <textarea v-model="invitation.notes" class="form-control" rows="3" cols="50" placeholder="Any comments or questions for us?">
                                         </textarea>
                                     </div>
                                 </div>

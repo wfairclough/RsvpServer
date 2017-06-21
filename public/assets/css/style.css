@@ -2114,3 +2114,13 @@ input.form-control {
     padding: 10px 30px;
 }
 
+.gift-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 90px;
+}
+
+.gift-list li {
+    display: inline;
+}
