@@ -1475,6 +1475,18 @@ footer.white-wrapper .social-links li a {
     
 }
 
+.popover-title {
+    color: #333;
+}
+
+.popover-content {
+    color: #333;
+}
+
+.popover {
+    max-width: 332px;
+}
+
 /*-----------------------------------------------------------------------------------*/
 /*  19 - MEDIA QUERIES
 /*-----------------------------------------------------------------------------------*/
@@ -2123,4 +2135,33 @@ input.form-control {
 
 .gift-list li {
     display: inline;
+}
+
+label.rsvp-code {
+    color: white;
+    font-size: 12px;
+}
+
+label.rsvp-code a {
+    cursor: pointer;
+    cursor: hand;
+}
+
+label.rsvp-code a:hover {
+    color: #8e72cc;
+}
+
+label.rsvp-code a:focus {
+    color: #8e72cc;
+}
+
+.rsvp-help-content {
+    position: absolute;
+
+    left: -9999px;
+}
+
+.rsvp-help-content img {
+    width: 204px;
+    width: 153px;
 }

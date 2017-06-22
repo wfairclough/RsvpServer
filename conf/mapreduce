@@ -1,0 +1,11 @@
+db.invitation.mapReduce(
+    function() { emit('guests', { count: this.guests.length }); },
+    function(key, values) {
+        var result = { count: 0 };
+        values.forEach(function(value) {
+            result.count += value.count;
+        });
+        return result;
+    },
+    { out: { inline: 1 }}
+);

@@ -186,6 +186,7 @@ var rvspForm = new Vue({
     invitation: {},
     stage: RsvpStage.CODE,
     isFetching: false,
+    showRsvpHelp: false,
     menu: {
       items: []
     },

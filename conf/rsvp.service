@@ -1,0 +1,12 @@
+[Unit]
+Description=RSVP Server
+After=network.target
+Documentation=http://sept16.com/
+
+[Service]
+ExecStart=/var/www/rsvp/server/bin/server
+TimeoutStopSec=0
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
