@@ -306,6 +306,10 @@ Vue.component('guest', {
     rsvp: function() {
       console.log('rsvp');
       var vm = this;
+      if (this.guest.rsvp) {
+        vm.toggleAppliedCover();
+        return;
+      }
       axios.put('/api/invitations/'+this.invitation.code+'/guests/'+this.guest.key+'/rsvp', {rsvp: true})
         .then(function(rsp) {
           console.log(rsp);
