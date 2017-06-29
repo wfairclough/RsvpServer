@@ -29,3 +29,5 @@ interface MongoDocument {
 interface MongoDocumentKeyable : MongoDocument, Keyable
 
 fun Boolean.toInt(): Int = if (this) 1 else 0
+
+data class ListResult<out T>(val items: List<T>, val count: Int)

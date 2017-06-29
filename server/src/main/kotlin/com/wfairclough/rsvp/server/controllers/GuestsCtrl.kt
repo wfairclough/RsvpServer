@@ -3,6 +3,7 @@ package com.wfairclough.rsvp.server.controllers
 import com.wfairclough.rsvp.server.model.Guest
 import com.wfairclough.rsvp.server.model.GuestMenuItem
 import com.wfairclough.rsvp.server.model.Invitation
+import com.wfairclough.rsvp.server.model.ListResult
 import com.wfairclough.rsvp.server.utils.Log
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
@@ -24,7 +25,7 @@ object GuestsCtrl : BaseCtrl() {
         val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
         val guests = invitationDao.findAllGuests(skip, limit, rsvp)
-        ctx.response().success(guests.sortedWith(Guest.guestCompareBy))
+        ctx.response().success(ListResult(guests.sortedWith(Guest.guestCompareBy), guests.size))
     }
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
