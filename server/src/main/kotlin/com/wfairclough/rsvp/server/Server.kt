@@ -14,6 +14,7 @@ import io.netty.handler.codec.http.HttpResponseStatus
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.wfairclough.rsvp.server.controllers.WebSocketHandler
 import org.litote.kmongo.util.KMongoConfiguration
 
 
@@ -89,6 +90,9 @@ object Rsvp {
         apiRouter.post("/menu/createitem").consumes(defaultContentType).handler(MenuCtrl.createItem)
         apiRouter.get("/menu/items/:key").handler(MenuCtrl.get)
         apiRouter.get("/menu/items").handler(MenuCtrl.list)
+
+        server.websocketHandler(WebSocketHandler())
+
     }
 
     private fun failureInit() {
