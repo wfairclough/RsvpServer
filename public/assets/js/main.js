@@ -182,6 +182,7 @@ var rvspForm = new Vue({
   el: "#rsvpContainer",
   data: {
     message: 'RSVP',
+    subtitle: '',
     rsvpCode: '',
     invitation: {},
     stage: RsvpStage.CODE,
@@ -232,7 +233,8 @@ var rvspForm = new Vue({
       })
         .then(function(rsp) {
           console.log(rsp);
-          vm.message = 'We look forward to seeing you!';
+          vm.message = 'Thanks for your RSVP!';
+          vm.subtitle = '';
           vm.isFetching = false;
           vm.stage = RsvpStage.FINISHED;
           vm.invitation = rsp.data;

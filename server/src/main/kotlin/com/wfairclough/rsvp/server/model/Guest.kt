@@ -1,5 +1,7 @@
 package com.wfairclough.rsvp.server.model
 
+import org.joda.time.DateTime;
+
 /**
  * Created by will on 2017-05-22.
  */
@@ -14,7 +16,8 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
                  val email: String? = null,
                  val address: Address? = null,
                  val phone: PhoneNo? = null,
-                 val plusOneGuestKey: DbKey? = null) : Keyable {
+                 val plusOneGuestKey: DbKey? = null,
+                 val updated: DateTime? = null) : Keyable {
 
     companion object {
         val guestCompareBy: Comparator<Guest>
@@ -23,6 +26,9 @@ data class Guest(override val key: DbKey? = DbKeyUtils.generate(),
                     { it.plusOne.toInt() },
                     { it.lastname },
                     { it.firstname })
+
+        val guestUpdatedCompareBy: Comparator<Guest>
+            get() = compareBy({ Long.MAX_VALUE - (it.updated?.millis ?: 0) })
     }
 }
 

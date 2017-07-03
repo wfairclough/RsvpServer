@@ -7,6 +7,7 @@ import com.wfairclough.rsvp.server.model.ListResult
 import com.wfairclough.rsvp.server.utils.Log
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
+import org.joda.time.DateTime
 
 /**
  * Created by will on 2017-05-22.
@@ -25,7 +26,7 @@ object GuestsCtrl : BaseCtrl() {
         val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
         val guests = invitationDao.findAllGuests(skip, limit, rsvp)
-        ctx.response().success(ListResult(guests.sortedWith(Guest.guestCompareBy), guests.size))
+        ctx.response().success(ListResult(guests.sortedWith(Guest.guestUpdatedCompareBy), guests.size))
     }
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
@@ -66,7 +67,8 @@ object GuestsCtrl : BaseCtrl() {
                         email = plusOneGuest.email,
                         rsvp = true, // Assume they are coming since they are a guest of a guest
                         invitationKey = invitation.key,
-                        plusOneGuestKey = guest.key
+                        plusOneGuestKey = guest.key,
+                        updated = DateTime.now()
                 )
                 val invite = invitation.copy(guests = oldGuests + listOf(newGuest))
                 invitationDao.update(invite)?.apply {
@@ -97,7 +99,7 @@ object GuestsCtrl : BaseCtrl() {
         val invite = invitationDao.findByCode(inviteCode)
         invite?.let {
             val parts = invite.guests.partition { it.key == guestKey }
-            val updatedGuest = parts.first.firstOrNull()?.copy(hasAddedPlusOne = rsvpJson.hasPlusOne)
+            val updatedGuest = parts.first.firstOrNull()?.copy(hasAddedPlusOne = rsvpJson.hasPlusOne, updated = DateTime.now())
             if (updatedGuest == null) {
                 ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
                 return@Handler
@@ -137,8 +139,8 @@ object GuestsCtrl : BaseCtrl() {
                 return@Handler
             }
             val updatedGuest = when (rsvpJson.rsvp) {
-                true -> guest.copy(rsvp = rsvpJson.rsvp)
-                false -> guest.copy(rsvp = rsvpJson.rsvp, hasAddedPlusOne = null)
+                true -> guest.copy(rsvp = rsvpJson.rsvp, updated = DateTime.now())
+                false -> guest.copy(rsvp = rsvpJson.rsvp, hasAddedPlusOne = null, updated = DateTime.now())
             }
             val updatedGuests = listOf(updatedGuest) + parts.second
             // We must delete the plus one if we are unrsvping
@@ -179,7 +181,7 @@ object GuestsCtrl : BaseCtrl() {
         val invite = invitationDao.findByCode(inviteCode)
         invite?.let {
             val parts = invite.guests.partition { it.key == guestKey }
-            val updatedGuest = parts.first.firstOrNull()?.copy(menuItem = menuJson)
+            val updatedGuest = parts.first.firstOrNull()?.copy(menuItem = menuJson, updated = DateTime.now())
             if (updatedGuest == null) {
                 ctx.fail("The guest with key $guestKey does not belong to the invitation with code $inviteCode", 400)
                 return@Handler
