@@ -42,8 +42,12 @@ fun <T> RoutingContext.bodyAsOrFail(clazz: Class<T>): T? {
     return data
 }
 
-fun <T> HttpServerResponse.success(resp: T) {
-    setStatusCode(200).end(Serializer.gson.toJson(resp))
+fun <T> HttpServerResponse.success(resp: T, pretty: Boolean = false) {
+    val gson = when (pretty) {
+        true -> Serializer.gsonPrettyPrint
+        false -> Serializer.gson
+    }
+    setStatusCode(200).end(gson.toJson(resp))
 }
 
 val HttpServerRequest.queryParams: Map<String, String>
@@ -60,3 +64,6 @@ val HttpServerRequest.queryParams: Map<String, String>
 fun HttpServerRequest.queryParam(key: String): String? {
     return queryParams[key]
 }
+
+val HttpServerRequest.prettyPrint: Boolean
+    get() = queryParam("pretty")?.toBoolean() ?: false

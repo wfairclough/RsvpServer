@@ -17,7 +17,7 @@ object GuestsCtrl : BaseCtrl() {
     val get = Handler<RoutingContext> { ctx ->
         val key = ctx.pathParam("key") ?: ""
         val guest =  invitationDao.findGuestByKey(key)
-        ctx.response().success(guest)
+        ctx.response().success(guest, pretty = ctx.request().prettyPrint)
     }
 
     val list = Handler<RoutingContext> { ctx ->
@@ -26,7 +26,7 @@ object GuestsCtrl : BaseCtrl() {
         val rsvp: Boolean? = ctx.request().queryParams["rsvp"]?.toBoolean()
 
         val guests = invitationDao.findAllGuests(skip, limit, rsvp)
-        ctx.response().success(ListResult(guests.sortedWith(Guest.guestUpdatedCompareBy), guests.size))
+        ctx.response().success(ListResult(guests.sortedWith(Guest.guestUpdatedCompareBy), guests.size), pretty = ctx.request().prettyPrint)
     }
 
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {

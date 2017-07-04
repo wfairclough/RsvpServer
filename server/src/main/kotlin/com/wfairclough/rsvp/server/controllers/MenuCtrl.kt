@@ -44,7 +44,7 @@ object MenuCtrl : BaseCtrl() {
             ctx.fail("Must include a non-blank menu item key", 400)
         }
         menuDao.findByKey(key)?.apply {
-            ctx.response().success(this)
+            ctx.response().success(this, pretty = ctx.request().prettyPrint)
         } ?: ctx.fail("Could not find menu item for key $key", 404)
     }
 
@@ -54,7 +54,7 @@ object MenuCtrl : BaseCtrl() {
         val limit = ctx.request().queryParams["limit"]?.toIntOrNull() ?: 100
 
         val menuItems = menuDao.findAll(skip, limit)
-        ctx.response().success(menuItems)
+        ctx.response().success(menuItems, pretty = ctx.request().prettyPrint)
     }
 
 }

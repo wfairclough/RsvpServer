@@ -23,14 +23,15 @@ object Serializer {
 
     }
 
-    val gson by lazy {
-        GsonBuilder()
-                .addSerializationExclusionStrategy(strategy)
-                .addDeserializationExclusionStrategy(strategy)
-                .registerTypeAdapter(DateTime::class.java, DateTimeConverter())
-                .create()
+    private val gsonBuilder
+        get() = GsonBuilder()
+            .addSerializationExclusionStrategy(strategy)
+            .addDeserializationExclusionStrategy(strategy)
+            .registerTypeAdapter(DateTime::class.java, DateTimeConverter())
 
-    }
+    val gson by lazy { gsonBuilder.create() }
+
+    val gsonPrettyPrint by lazy { gsonBuilder.setPrettyPrinting().create() }
 
 }
 

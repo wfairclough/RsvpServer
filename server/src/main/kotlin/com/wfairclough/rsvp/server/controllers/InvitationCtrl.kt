@@ -131,7 +131,7 @@ object InvitationCtrl : BaseCtrl() {
                     Log.d("Set invite ${it.code} to viewed")
                 }
             }
-            ctx.response().success(it.sortedCopy())
+            ctx.response().success(it.sortedCopy(), pretty = ctx.request().prettyPrint)
         } ?: ctx.fail("Could not find invitation with code: $code", 404)
     }
 
@@ -164,7 +164,7 @@ object InvitationCtrl : BaseCtrl() {
         }
 
         ret.filterNotNull().let {
-            ctx.response().success( it.map { it.sortedCopy() } )
+            ctx.response().success( it.map { it.sortedCopy() }, pretty = ctx.request().prettyPrint )
         }
     }
 
