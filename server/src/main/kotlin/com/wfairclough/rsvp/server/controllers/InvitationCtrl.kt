@@ -22,7 +22,7 @@ object InvitationCtrl : BaseCtrl() {
     }
 
     val create = Handler<RoutingContext> { ctx ->
-        val reqJson: CreateInvitationReq = ctx.bodyAsOrFail(CreateInvitationReq::class.java) ?: return@Handler
+        val reqJson: CreateInvitationReq = ctx.bodyAsOrFail<CreateInvitationReq>() ?: return@Handler
 
         Log.d("Create Invite: $reqJson")
 
@@ -82,7 +82,7 @@ object InvitationCtrl : BaseCtrl() {
     }
 
     val addGuest = Handler<RoutingContext> { ctx ->
-        val reqJson: InvitationGuest = ctx.bodyAsOrFail(InvitationGuest::class.java) ?: return@Handler
+        val reqJson: InvitationGuest = ctx.bodyAsOrFail<InvitationGuest>() ?: return@Handler
         val inviteCode = ctx.pathParam("code") ?: ""
         if (inviteCode.isBlank()) {
             ctx.fail("Could not find invitation with blank code", 400)
@@ -143,7 +143,7 @@ object InvitationCtrl : BaseCtrl() {
             ctx.fail("Could not find invitation with blank code", 400)
             return@Handler
         }
-        val rsvpForm = ctx.bodyAsOrFail(RsvpForm::class.java) ?: return@Handler
+        val rsvpForm = ctx.bodyAsOrFail<RsvpForm>() ?: return@Handler
 
         invitationDao.findByCode(code)?.let {
             invitationDao.update(it.copy(songRequest = rsvpForm.song, notes = rsvpForm.notes))?.let {
@@ -155,7 +155,7 @@ object InvitationCtrl : BaseCtrl() {
     }
 
     val query = Handler<RoutingContext> { ctx ->
-        val queryJson = ctx.bodyAsOrFail(InvitationQuery::class.java) ?: return@Handler
+        val queryJson = ctx.bodyAsOrFail<InvitationQuery>() ?: return@Handler
         val ret: List<Invitation?> = when {
             queryJson.key != null -> listOf(invitationDao.findFirst { it.key == queryJson.key})
             queryJson.code != null -> listOf(invitationDao.findByCode(queryJson.code))

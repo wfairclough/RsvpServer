@@ -24,8 +24,8 @@ open class BaseCtrl {
 }
 
 
-fun <T> RoutingContext.bodyAs(clazz: Class<T>): T {
-    return Serializer.gson.fromJson<T>(bodyAsString, clazz)
+inline fun <reified T : Any> RoutingContext.bodyAs(): T {
+    return Serializer.gson.fromJson<T>(bodyAsString, T::class.java)
 }
 
 fun RoutingContext.fail(message: String, code: Int) {
@@ -33,8 +33,8 @@ fun RoutingContext.fail(message: String, code: Int) {
     fail(code)
 }
 
-fun <T> RoutingContext.bodyAsOrFail(clazz: Class<T>): T? {
-    val data = Serializer.gson.fromJson<T>(bodyAsString, clazz)
+inline fun <reified T : Any> RoutingContext.bodyAsOrFail(): T? {
+    val data = Serializer.gson.fromJson<T>(bodyAsString, T::class.java)
     if (data == null) {
         fail("Could not parse request body", 400)
         return null

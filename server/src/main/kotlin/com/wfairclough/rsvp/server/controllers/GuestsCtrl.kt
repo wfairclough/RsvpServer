@@ -40,7 +40,7 @@ object GuestsCtrl : BaseCtrl() {
             ctx.fail("Must include a non-blank guest key", 400)
             return@Handler
         }
-        val plusOneGuest = ctx.bodyAsOrFail(InvitationPlusOneGuest::class.java)
+        val plusOneGuest = ctx.bodyAsOrFail<InvitationPlusOneGuest>()
         if (plusOneGuest == null) {
             ctx.fail("Could not parse Plus One Guest", 400)
             return@Handler
@@ -91,7 +91,7 @@ object GuestsCtrl : BaseCtrl() {
             ctx.fail("Must include valid invite code", 400)
             return@Handler
         }
-        val rsvpJson = ctx.bodyAsOrFail(PlusOneRequest::class.java)
+        val rsvpJson = ctx.bodyAsOrFail<PlusOneRequest>()
         if (rsvpJson == null) {
             ctx.fail("Could not parse Plus One Request", 400)
             return@Handler
@@ -124,7 +124,7 @@ object GuestsCtrl : BaseCtrl() {
             ctx.fail("Must include valid invite code", 400)
             return@Handler
         }
-        val rsvpJson = ctx.bodyAsOrFail(RsvpRequest::class.java)
+        val rsvpJson = ctx.bodyAsOrFail<RsvpRequest>()
         if (rsvpJson == null) {
             ctx.fail("Could not parse RSVP Request", 400)
             return@Handler
@@ -166,7 +166,7 @@ object GuestsCtrl : BaseCtrl() {
             ctx.fail("Must include valid invite code", 400)
             return@Handler
         }
-        val menuJson = ctx.bodyAsOrFail(GuestMenuItem::class.java)
+        val menuJson = ctx.bodyAsOrFail<GuestMenuItem>()
         if (menuJson == null) {
             ctx.fail("Could not parse Menu Item Request", 400)
             return@Handler

@@ -17,7 +17,7 @@ object MenuCtrl : BaseCtrl() {
                                  val description: String? = null)
 
     val createItem = Handler<RoutingContext> { ctx ->
-        val reqJson: CreateMenuItemReq = ctx.bodyAsOrFail(CreateMenuItemReq::class.java) ?: return@Handler
+        val reqJson: CreateMenuItemReq = ctx.bodyAsOrFail<CreateMenuItemReq>() ?: return@Handler
 
         Log.d("Create Menu Item: $reqJson")
 
