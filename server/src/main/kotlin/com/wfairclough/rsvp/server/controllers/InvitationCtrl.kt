@@ -120,7 +120,6 @@ object InvitationCtrl : BaseCtrl() {
         }
         invitationDao.findByCode(code)?.let {
             if (!ctx.normalisedPath().endsWith("get")) {
-                Log.d("Headers: ${ctx.request().headers().map { it.toString() }.joinToString { it }}")
                 val visitRec = VisitRecord(datetime = DateTime.now(),
                         userAgent = ctx.request()?.getHeader(HttpHeaders.USER_AGENT),
                         localAddress = ctx.request()?.localAddress()?.toString(),
@@ -133,6 +132,12 @@ object InvitationCtrl : BaseCtrl() {
             }
             ctx.response().success(it.sortedCopy(), pretty = ctx.request().prettyPrint)
         } ?: ctx.fail("Could not find invitation with code: $code", 404)
+    }
+
+    val list = Handler<RoutingContext> { ctx ->
+        Log.i("list: ${ctx.normalisedPath()}")
+        val invites = invitationDao.find()
+        ctx.response().success(invites.sortedWith(compareBy( { !it.viewed }, { it.code } )), pretty = ctx.request().prettyPrint)
     }
 
     data class RsvpForm(val song: String?, val notes: String?)

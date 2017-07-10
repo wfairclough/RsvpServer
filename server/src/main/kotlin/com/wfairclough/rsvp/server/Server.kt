@@ -73,6 +73,7 @@ object Rsvp {
 
         apiRouter.post("/invitations/create").consumes(defaultContentType).handler(InvitationCtrl.create)
         apiRouter.post("/invitations/query").consumes(defaultContentType).handler(InvitationCtrl.query)
+        apiRouter.get("/invitations").handler(InvitationCtrl.list)
         apiRouter.get("/invitations/guests").handler(GuestsCtrl.list)
         apiRouter.get("/invitations/guests/:key").handler(GuestsCtrl.get)
         apiRouter.post("/invitations/:code/guests").consumes(defaultContentType).handler(InvitationCtrl.addGuest)
