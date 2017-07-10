@@ -108,7 +108,7 @@ object InvitationCtrl : BaseCtrl() {
         } ?: ctx.fail("Could not find invitation with code: $inviteCode", 404)
     }
 
-    data class InvitationQuery(val query: String?, val code: String?, val key: String?)
+    data class InvitationQuery(val query: String?, val code: String?, val key: String?, val selectors: Set<String>?)
 
     val get = Handler<RoutingContext> { ctx ->
 
@@ -169,7 +169,7 @@ object InvitationCtrl : BaseCtrl() {
         }
 
         ret.filterNotNull().let {
-            ctx.response().success( it.map { it.sortedCopy() }, pretty = ctx.request().prettyPrint )
+            ctx.response().success( it.map { it.sortedCopy().applyProjection(queryJson.selectors) }, pretty = ctx.request().prettyPrint )
         }
     }
 
