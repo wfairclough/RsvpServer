@@ -11,6 +11,7 @@ import io.vertx.ext.web.RoutingContext
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import java.lang.reflect.Type
+import kotlin.reflect.KClass
 
 /**
  * Created by will on 2017-05-22.

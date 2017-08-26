@@ -29,9 +29,48 @@ object GuestsCtrl : BaseCtrl() {
         ctx.response().success(ListResult(guests.sortedWith(Guest.guestUpdatedCompareBy), guests.size), pretty = ctx.request().prettyPrint)
     }
 
+    data class UpdateGuestReq(val firstname: String?, val lastname: String?, val hasPlusOne: Boolean?, val email: String?)
+
+    val updateGuest = Handler<RoutingContext> { ctx ->
+        val guestKey = ctx.pathParam("key") ?: ""
+        if (guestKey.isBlank()) {
+            ctx.fail("Must include a non-blank guest key", 400)
+            return@Handler
+        }
+        val inviteCode = ctx.pathParam("code") ?: ""
+        if (inviteCode.isBlank()) {
+            ctx.fail("Must include a non-blank invite code", 400)
+            return@Handler
+        }
+        val updateGuestReq = ctx.bodyAsOrFail<UpdateGuestReq>()
+        if (updateGuestReq == null) {
+            ctx.fail("Could not parse Update Guest Request", 400)
+            return@Handler
+        }
+
+        invitationDao.findByCode(inviteCode)?.let { invitation ->
+            val (guestToUpdateList, restGuest) = invitation.guests.partition { it.key == guestKey }
+            val updatedGuests = guestToUpdateList.map {
+                var guest = it
+                guest = updateGuestReq.firstname?.let { guest.copy(firstname = it) } ?: guest
+                guest = updateGuestReq.lastname?.let { guest.copy(lastname = it) } ?: guest
+                guest = updateGuestReq.email?.let { guest.copy(email = it) } ?: guest
+                guest = updateGuestReq.hasPlusOne?.let { guest.copy(plusOne = it) } ?: guest
+                if (!guest.plusOne && (guest.hasAddedPlusOne ?: false)) {
+                    ctx.fail("Cannot remove plus one from guest when guest is already added", 400)
+                    return@Handler
+                }
+                return@map guest
+            }
+            val updatedInvite = invitation.copy(guests = updatedGuests + restGuest)
+            invitationDao.update(updatedInvite)?.apply {
+                ctx.response().success(this.sortedCopy())
+            } ?: ctx.fail("Could not update invitation with updated guest", 500)
+        } ?: ctx.fail("No invitation found for guest key $guestKey. YIKES!", 500)
+    }
+
     data class InvitationPlusOneGuest(val firstname: String, val lastname: String, val email: String?) {
-        val fullname: String
-            get() = "$firstname $lastname"
+        val fullname: String = "$firstname $lastname"
     }
 
     val addPlusOne = Handler<RoutingContext> { ctx ->
